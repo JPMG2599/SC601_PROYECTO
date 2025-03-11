@@ -1,0 +1,57 @@
+﻿@model SC601_V1.Models.UsuarioModel
+
+
+@{
+    ViewBag.Title = "Iniciar Sesión";
+    Layout = "~/Views/Shared/_Layout_Externo.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                <div class="card-header"><h3 class="text-center font-weight-light my-4">Iniciar Sesión</h3></div>
+                <div class="card-body">
+
+
+                    <!-- Inicio de Formulario -->
+                    @using (Html.BeginForm("IniciarSesion", "Usuario"))
+                    {
+
+                        <!-- Mensaje de Error en caso que exista -->
+                        if (!string.IsNullOrEmpty(ViewBag.Error))
+                        {
+                            <div class="alert alert-warning">
+                                @ViewBag.Error
+                            </div>
+                        }
+
+
+                        <!-- Input Correo -->
+                        <div class="form-floating mb-3">
+                            @Html.TextBoxFor(x => x.Correo, new { @class = "form-control", @placeholder = "name@example.com", @Required = "true", @type = "email" })
+                            @Html.LabelFor(x => x.Correo, new { @class = "form-label" })
+                        </div>
+
+                        <!-- Input Contraseña -->
+                        <div class="form-floating mb-3">
+                            @Html.TextBoxFor(x => x.Contrasena, new { @class = "form-control", @placeholder = "Contraseña", @Required = "true", @type = "password" })
+                            @Html.LabelFor(x => x.Contrasena, new { @class = "form-label" })
+                        </div>
+
+
+                        <!-- Botón Iniciar Sesión -->
+                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                            <a class="small" href="@Url.Action("RecuperarContrasena", "Usuario")">Recuperar Contraseña</a>
+                            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                        </div>
+                    }
+                    <!-- Fin de Formulario -->
+
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small"><a href="@Url.Action("RegistrarUsuario", "Usuario")">¿Necesitas una cuenta? Regístrate!</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
