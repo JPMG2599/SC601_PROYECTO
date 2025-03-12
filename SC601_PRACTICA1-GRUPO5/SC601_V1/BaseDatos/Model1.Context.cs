@@ -29,11 +29,29 @@ namespace SC601_V1.BaseDatos
     
         public virtual DbSet<Categoria> Categoria { get; set; }
         public virtual DbSet<Comprador> Comprador { get; set; }
+        public virtual DbSet<Error> Error { get; set; }
         public virtual DbSet<Factura> Factura { get; set; }
         public virtual DbSet<Producto> Producto { get; set; }
         public virtual DbSet<Rol> Rol { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<Venta> Venta { get; set; }
+    
+        public virtual int RegistrarError(Nullable<long> idUsuario, string mensaje, string origen)
+        {
+            var idUsuarioParameter = idUsuario.HasValue ?
+                new ObjectParameter("IdUsuario", idUsuario) :
+                new ObjectParameter("IdUsuario", typeof(long));
+    
+            var mensajeParameter = mensaje != null ?
+                new ObjectParameter("Mensaje", mensaje) :
+                new ObjectParameter("Mensaje", typeof(string));
+    
+            var origenParameter = origen != null ?
+                new ObjectParameter("Origen", origen) :
+                new ObjectParameter("Origen", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RegistrarError", idUsuarioParameter, mensajeParameter, origenParameter);
+        }
     
         public virtual int SP_ActualizarContrasena(string correo, string contrasenaActual, string contrasenaNueva)
         {
@@ -52,6 +70,39 @@ namespace SC601_V1.BaseDatos
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_ActualizarContrasena", correoParameter, contrasenaActualParameter, contrasenaNuevaParameter);
         }
     
+        public virtual int SP_ActualizarUsuario(Nullable<long> iD_Usuario, Nullable<long> id_Rol, string cedula, string nombre, string correo, string telefono, Nullable<bool> estado)
+        {
+            var iD_UsuarioParameter = iD_Usuario.HasValue ?
+                new ObjectParameter("ID_Usuario", iD_Usuario) :
+                new ObjectParameter("ID_Usuario", typeof(long));
+    
+            var id_RolParameter = id_Rol.HasValue ?
+                new ObjectParameter("Id_Rol", id_Rol) :
+                new ObjectParameter("Id_Rol", typeof(long));
+    
+            var cedulaParameter = cedula != null ?
+                new ObjectParameter("Cedula", cedula) :
+                new ObjectParameter("Cedula", typeof(string));
+    
+            var nombreParameter = nombre != null ?
+                new ObjectParameter("Nombre", nombre) :
+                new ObjectParameter("Nombre", typeof(string));
+    
+            var correoParameter = correo != null ?
+                new ObjectParameter("Correo", correo) :
+                new ObjectParameter("Correo", typeof(string));
+    
+            var telefonoParameter = telefono != null ?
+                new ObjectParameter("Telefono", telefono) :
+                new ObjectParameter("Telefono", typeof(string));
+    
+            var estadoParameter = estado.HasValue ?
+                new ObjectParameter("Estado", estado) :
+                new ObjectParameter("Estado", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_ActualizarUsuario", iD_UsuarioParameter, id_RolParameter, cedulaParameter, nombreParameter, correoParameter, telefonoParameter, estadoParameter);
+        }
+    
         public virtual ObjectResult<SP_IniciarSesion_Result> SP_IniciarSesion(string correo, string contrasena)
         {
             var correoParameter = correo != null ?
@@ -63,6 +114,16 @@ namespace SC601_V1.BaseDatos
                 new ObjectParameter("Contrasena", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_IniciarSesion_Result>("SP_IniciarSesion", correoParameter, contrasenaParameter);
+        }
+    
+        public virtual ObjectResult<SP_ListarRoles_Result> SP_ListarRoles()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ListarRoles_Result>("SP_ListarRoles");
+        }
+    
+        public virtual ObjectResult<SP_ListarUsuarios_Result> SP_ListarUsuarios()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ListarUsuarios_Result>("SP_ListarUsuarios");
         }
     
         public virtual int SP_RegistrarUsuario(string cedula, string nombre, string correo, string contrasena, string telefono)
@@ -90,13 +151,13 @@ namespace SC601_V1.BaseDatos
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_RegistrarUsuario", cedulaParameter, nombreParameter, correoParameter, contrasenaParameter, telefonoParameter);
         }
     
-        public virtual ObjectResult<string> SP_VerificarCorreo(string correo)
+        public virtual ObjectResult<SP_ResetearContrasena_Result> SP_ResetearContrasena(string correo)
         {
             var correoParameter = correo != null ?
                 new ObjectParameter("Correo", correo) :
                 new ObjectParameter("Correo", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("SP_VerificarCorreo", correoParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ResetearContrasena_Result>("SP_ResetearContrasena", correoParameter);
         }
     }
 }

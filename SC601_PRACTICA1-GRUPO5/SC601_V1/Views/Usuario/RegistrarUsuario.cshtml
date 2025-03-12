@@ -11,45 +11,56 @@
         <div class="card shadow-lg border-0 rounded-lg mt-5">
             <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
             <div class="card-body">
-                <form>
+
+                <!-- Inicio Formulario -->
+                @using (Html.BeginForm("RegistrarUsuario", "Usuario"))
+                {
+                    <!-- Mensaje de Error en caso que exista -->
+                    if (!string.IsNullOrEmpty(ViewBag.Error))
+                    {
+                        <div class="alert alert-warning">
+                            @ViewBag.Error
+                        </div>
+                    }
+
+                    <!-- Input Cédula -->
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Cedula, new { @class = "form-control", @placeholder = "Ingrese identificación", @Required = "true", @onchange = "ConsultarNombre();" })
+                        @Html.LabelFor(x => x.Cedula, new { @class = "form-label" })
+                    </div>
+
                     <!-- Input Nombre -->
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="inputNombre" type="text" placeholder="Ingrese nombre completo" />
-                        <label for="inputNombre">Nombre completo</label>
+                        @Html.TextBoxFor(x => x.Nombre, new { @class = "form-control", @placeholder = "Nombre completo", @Required = "true", @ReadOnly = "true" })
+                        @Html.LabelFor(x => x.Nombre, new { @class = "form-label" })
                     </div>
 
                     <!-- Input Correo -->
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="inputEmail" type="email" placeholder="nombre@ejemplo.com" />
-                        <label for="inputEmail">Correo Electrónico</label>
+                        @Html.TextBoxFor(x => x.Correo, new { @class = "form-control", @placeholder = "name@example.com", @Required = "true", @type = "email" })
+                        @Html.LabelFor(x => x.Correo, new { @class = "form-label" })
                     </div>
 
                     <!-- Input Contraseña -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3 mb-md-0">
-                                <input class="form-control" id="inputPassword" type="password" placeholder="Crear una contraseña" />
-                                <label for="inputPassword">Contraseña</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3 mb-md-0">
-                                <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirmar contraseña" />
-                                <label for="inputPasswordConfirm">Confirmar Contraseña</label>
-                            </div>
-                        </div>
+                    <div class="form-floating mb-3">
+                        @Html.PasswordFor(x => x.Contrasena, new { @class = "form-control", @placeholder = "Contraseña", @Required = "true", @type = "password" })
+                        @Html.LabelFor(x => x.Contrasena, new { @class = "form-label" })
                     </div>
 
                     <!-- Input Telefono -->
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="inputTelefono" type="tel" placeholder="8888-8888" />
-                        <label for="inputTelefono">Teléfono</label>
+                        @Html.TextBoxFor(x => x.Telefono, new { @class = "form-control", @type = "tel", @placeholder = "8888-8888" })
+                        @Html.LabelFor(x => x.Telefono, new { @class = "form-label" })
                     </div>
 
                     <div class="mt-4 mb-0">
-                        <div class="d-grid"><a class="btn btn-primary btn-block" href="@Url.Action("CrearUsuario", "Usuario")">Crear Cuenta</a></div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-block">Crear Cuenta</button>
+                        </div>
                     </div>
-                </form>
+                }
+                <!-- Fin Formulario -->
+
             </div>
             <div class="card-footer text-center py-3">
                 <div class="small"><a href="@Url.Action("IniciarSesion", "Usuario")">¿Tienes una cuenta? Inicia Sesión</a></div>

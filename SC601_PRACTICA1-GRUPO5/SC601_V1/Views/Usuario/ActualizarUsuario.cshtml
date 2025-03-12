@@ -1,0 +1,101 @@
+﻿@model SC601_V1.Models.UsuarioModel
+
+@{
+    ViewBag.Title = "ActualizarUsuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+
+        <div class="card shadow-lg border-0 rounded-lg mt-5">
+            <div class="card-header"><h3 class="text-center font-weight-light my-4">Actualizar Cuenta</h3></div>
+            <div class="card-body">
+
+                <!-- Inicio Formulario -->
+                @using (Html.BeginForm("ActualizarUsuario", "Usuario"))
+                {
+                    <!-- Mensaje de Error en caso que exista -->
+                    if (!string.IsNullOrEmpty(ViewBag.Error))
+                    {
+                        <div class="alert alert-warning">
+                            @ViewBag.Error
+                        </div>
+                    }
+
+                    <!-- ID Oculto -->
+                    @Html.HiddenFor(x => x.ID_Usuario, new { @class = "form-control form-control-user", @placeholder = "Id", @Required = "true" })
+
+                    <!-- Input Cédula -->
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Cedula, new { @class = "form-control", @placeholder = "Ingrese identificación", @Required = "true", @onchange = "ConsultarNombre();" })
+                        @Html.LabelFor(x => x.Cedula, new { @class = "form-label" })
+                    </div>
+
+                    <!-- Input Nombre -->
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Nombre, new { @class = "form-control", @placeholder = "Nombre completo", @Required = "true", @ReadOnly = "true" })
+                        @Html.LabelFor(x => x.Nombre, new { @class = "form-label" })
+                    </div>
+
+                    <!-- Input Correo -->
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Correo, new { @class = "form-control", @placeholder = "Nombre completo", @Required = "true", @type = "email" })
+                        @Html.LabelFor(x => x.Correo, new { @class = "form-label" })
+                    </div>
+
+                    if (Session["Rol"].ToString().Trim() != null && Session["Rol"].ToString().Trim() == "Administrador")
+                    {
+                        <!-- Dropdown Roles -->
+                        <div class="form-floating mb-3">
+                            @Html.DropDownListFor(x => x.ID_Rol, new List<SelectListItem> {
+                                new SelectListItem { Text = "Seleccione un rol...", Value = "", Disabled = true, Selected = true }
+                            }.Concat((IEnumerable<SelectListItem>)ViewBag.RolesCombo),
+                                 new { @class = "form-select", @required = "true" })
+
+                            <label for="ID_Rol">Rol</label>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.ID_Rol, new { @class = "form-control form-control-user", @placeholder = "Id", @Required = "true" })
+
+                    }
+
+                    <!-- Input Telefono -->
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Telefono, new { @class = "form-control", @type = "tel", @placeholder = "8888-8888" })
+                        @Html.LabelFor(x => x.Telefono, new { @class = "form-label" })
+                    </div>
+
+                    if (Session["Rol"].ToString().Trim() != null && Session["Rol"].ToString().Trim() == "Administrador")
+                    {
+                        <!-- Dropdown Estado (Activo / Inactivo) -->
+                        <div class="form-floating mb-3">
+                            @Html.DropDownListFor(x => x.Estado, new List<SelectListItem> {
+                                new SelectListItem { Text = "Seleccione...", Value = "", Disabled = true, Selected = true }
+                            }.Concat((IEnumerable<SelectListItem>)ViewBag.EstadoCombo),
+                                 new { @class = "form-select", @required = "true" })
+
+                            <label for="Estado">Estado</label>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.Estado, new { @class = "form-control form-control-user", @placeholder = "Id", @Required = "true" })
+
+                    }
+
+                    <!-- Botón de Enviar -->
+                    <div class="mt-4 mb-0">
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-block">Actualizar Cuenta</button>
+                        </div>
+                    </div>
+                }
+                <!-- Fin Formulario -->
+
+            </div>
+        </div>
+    </div>
+</div>

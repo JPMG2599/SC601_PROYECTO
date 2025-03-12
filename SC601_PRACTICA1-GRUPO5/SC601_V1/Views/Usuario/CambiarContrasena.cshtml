@@ -1,15 +1,27 @@
 ﻿@model SC601_V1.Models.CambiarContrasenaModel
 
 @{
+    var usuario = string.IsNullOrWhiteSpace(Session["NombreUsuario"] as string)
+                  ? "Invitad@"
+                  : (Session["NombreUsuario"] as string).Trim();
+
     ViewBag.Title = "CambiarContrasena";
-    Layout = "~/Views/Shared/_Layout_Externo.cshtml";
+
+    if (!string.IsNullOrEmpty(usuario) && usuario == "Invitad@")
+    {
+        Layout = "~/Views/Shared/_Layout_Externo.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 }
 
 <div class="row justify-content-center">
     <div class="col-lg-5">
         <div class="card shadow-lg border-0 rounded-lg mt-5">
             <!-- Titulo del formulario -->
-            <div class="card-header"><h3 class="text-center font-weight-light my-4">Cabmiar Contraseña</h3></div>
+            <div class="card-header"><h3 class="text-center font-weight-light my-4">Cambiar Contraseña</h3></div>
 
             <div class="card-body">
 
@@ -48,17 +60,31 @@
 
 
                     <!-- Botón de Restablecer -->
-                    <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                        <a class="small" href="@Url.Action("IniciarSesion", "Usuario")">Volver al Incio Sesión</a>
-                        <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
-                    </div>
+                    if (!string.IsNullOrEmpty(usuario) && usuario == "Invitad@")
+                    {
+                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                            <a class="small" href="@Url.Action("IniciarSesion", "Usuario")">Volver al Incio Sesión</a>
+                            <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mt-4 mb-0">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-block">Cambiar Contraseña</button>
+                            </div>
+                        </div>
+                    }
                 }
                 <!-- Fin  de Formulario -->
+            </div>
 
-            </div>
-            <div class="card-footer text-center py-3">
-                <div class="small"><a href="@Url.Action("RegistrarUsuario", "Usuario")">¿Necesitas una cuenta? Regístrate!</a></div>
-            </div>
+            @if (!string.IsNullOrEmpty(usuario) && usuario == "Invitad@")
+            {
+                <div class="card-footer text-center py-3">
+                    <div class="small"><a href="@Url.Action("RegistrarUsuario", "Usuario")">¿Necesitas una cuenta? Regístrate!</a></div>
+                </div>
+            }
         </div>
     </div>
 </div>

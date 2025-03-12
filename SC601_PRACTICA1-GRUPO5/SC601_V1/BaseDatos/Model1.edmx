@@ -4,15 +4,15 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="KN_ProyectoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="KN_ProyectoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Categoria">
           <Key>
             <PropertyRef Name="ID_Categoria" />
           </Key>
           <Property Name="ID_Categoria" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Nombre" Type="char" MaxLength="100" Nullable="false" />
-          <Property Name="Descripcion" Type="char" MaxLength="200" Nullable="false" />
-          <Property Name="Imagen" Type="char" MaxLength="200" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Imagen" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Activo" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Comprador">
@@ -21,9 +21,19 @@
           </Key>
           <Property Name="ID_Comprador" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Usuario" Type="bigint" Nullable="false" />
-          <Property Name="Nombre" Type="char" MaxLength="100" Nullable="false" />
-          <Property Name="Correo" Type="char" MaxLength="100" Nullable="false" />
-          <Property Name="Telefono" Type="char" MaxLength="100" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Telefono" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Error">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="bigint" />
+          <Property Name="Mensaje" Type="varchar(max)" Nullable="false" />
+          <Property Name="FechaHora" Type="datetime" Nullable="false" />
+          <Property Name="Origen" Type="varchar" MaxLength="500" Nullable="false" />
         </EntityType>
         <EntityType Name="Factura">
           <Key>
@@ -42,10 +52,10 @@
           </Key>
           <Property Name="ID_Producto" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Categoria" Type="bigint" Nullable="false" />
-          <Property Name="Nombre" Type="char" MaxLength="100" Nullable="false" />
-          <Property Name="Descripcion" Type="char" MaxLength="200" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Precio" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="Imagen" Type="char" MaxLength="200" Nullable="false" />
+          <Property Name="Imagen" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Activo" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Rol">
@@ -53,7 +63,7 @@
             <PropertyRef Name="ID_Rol" />
           </Key>
           <Property Name="ID_Rol" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Nombre_rol" Type="char" MaxLength="50" Nullable="false" />
+          <Property Name="Nombre_rol" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Usuario">
           <Key>
@@ -61,11 +71,11 @@
           </Key>
           <Property Name="ID_Usuario" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Rol" Type="bigint" Nullable="false" />
-          <Property Name="Cedula" Type="char" MaxLength="50" Nullable="false" />
-          <Property Name="Nombre" Type="char" MaxLength="100" Nullable="false" />
-          <Property Name="Correo" Type="char" MaxLength="100" Nullable="false" />
-          <Property Name="Contrasena" Type="char" MaxLength="100" Nullable="false" />
-          <Property Name="Telefono" Type="char" MaxLength="100" Nullable="false" />
+          <Property Name="Cedula" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Contrasena" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Telefono" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Estado" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Venta">
@@ -162,28 +172,45 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="RegistrarError" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdUsuario" Type="bigint" Mode="In" />
+          <Parameter Name="Mensaje" Type="varchar(max)" Mode="In" />
+          <Parameter Name="Origen" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="SP_ActualizarContrasena" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Correo" Type="char" Mode="In" />
-          <Parameter Name="ContrasenaActual" Type="char" Mode="In" />
-          <Parameter Name="ContrasenaNueva" Type="char" Mode="In" />
+          <Parameter Name="ContrasenaActual" Type="varchar" Mode="In" />
+          <Parameter Name="ContrasenaNueva" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="SP_ActualizarUsuario" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_Usuario" Type="bigint" Mode="In" />
+          <Parameter Name="Id_Rol" Type="bigint" Mode="In" />
+          <Parameter Name="Cedula" Type="varchar" Mode="In" />
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="Correo" Type="varchar" Mode="In" />
+          <Parameter Name="Telefono" Type="varchar" Mode="In" />
+          <Parameter Name="Estado" Type="bit" Mode="In" />
         </Function>
         <Function Name="SP_IniciarSesion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="Correo" Type="char" Mode="In" />
-          <Parameter Name="Contrasena" Type="char" Mode="In" />
+          <Parameter Name="Correo" Type="varchar" Mode="In" />
+          <Parameter Name="Contrasena" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="SP_ListarRoles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SP_ListarUsuarios" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_RegistrarUsuario" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="Cedula" Type="char" Mode="In" />
-          <Parameter Name="Nombre" Type="char" Mode="In" />
-          <Parameter Name="Correo" Type="char" Mode="In" />
-          <Parameter Name="Contrasena" Type="char" Mode="In" />
-          <Parameter Name="Telefono" Type="char" Mode="In" />
+          <Parameter Name="Cedula" Type="varchar" Mode="In" />
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="Correo" Type="varchar" Mode="In" />
+          <Parameter Name="Contrasena" Type="varchar" Mode="In" />
+          <Parameter Name="Telefono" Type="varchar" Mode="In" />
         </Function>
-        <Function Name="SP_VerificarCorreo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="Correo" Type="char" Mode="In" />
+        <Function Name="SP_ResetearContrasena" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Correo" Type="varchar" Mode="In" />
         </Function>
         <EntityContainer Name="KN_ProyectoModelStoreContainer">
           <EntitySet Name="Categoria" EntityType="Self.Categoria" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comprador" EntityType="Self.Comprador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Error" EntityType="Self.Error" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Factura" EntityType="Self.Factura" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Producto" EntityType="Self.Producto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rol" EntityType="Self.Rol" Schema="dbo" store:Type="Tables" />
@@ -218,7 +245,8 @@
             <End Role="Venta" EntitySet="Venta" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="KN_ProyectoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -227,9 +255,9 @@
             <PropertyRef Name="ID_Categoria" />
           </Key>
           <Property Name="ID_Categoria" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="Imagen" Type="String" MaxLength="200" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Imagen" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Producto" Relationship="Self.FK_Producto_Categoria" FromRole="Categoria" ToRole="Producto" />
         </EntityType>
@@ -239,11 +267,21 @@
           </Key>
           <Property Name="ID_Comprador" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ID_Usuario" Type="Int64" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="Telefono" Type="String" MaxLength="100" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Telefono" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Usuario" Relationship="Self.FK_Comprador_Usuario" FromRole="Comprador" ToRole="Usuario" />
           <NavigationProperty Name="Factura" Relationship="Self.FK_Factura_Comprador" FromRole="Comprador" ToRole="Factura" />
+        </EntityType>
+        <EntityType Name="Error">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int64" />
+          <Property Name="Mensaje" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaHora" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Origen" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityType Name="Factura">
           <Key>
@@ -265,10 +303,10 @@
           </Key>
           <Property Name="ID_Producto" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ID_Categoria" Type="Int64" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Precio" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="Imagen" Type="String" MaxLength="200" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Imagen" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Categoria" Relationship="Self.FK_Producto_Categoria" FromRole="Producto" ToRole="Categoria" />
           <NavigationProperty Name="Venta" Relationship="Self.FK_Venta_Producto" FromRole="Producto" ToRole="Venta" />
@@ -278,7 +316,7 @@
             <PropertyRef Name="ID_Rol" />
           </Key>
           <Property Name="ID_Rol" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre_rol" Type="String" MaxLength="50" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Nombre_rol" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Rol" FromRole="Rol" ToRole="Usuario" />
         </EntityType>
         <EntityType Name="Usuario">
@@ -287,11 +325,11 @@
           </Key>
           <Property Name="ID_Usuario" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ID_Rol" Type="Int64" Nullable="false" />
-          <Property Name="Cedula" Type="String" MaxLength="50" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="Contrasena" Type="String" MaxLength="100" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="Telefono" Type="String" MaxLength="100" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Cedula" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Contrasena" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Telefono" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Estado" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Comprador" Relationship="Self.FK_Comprador_Usuario" FromRole="Usuario" ToRole="Comprador" />
           <NavigationProperty Name="Factura" Relationship="Self.FK_Factura_Usuario" FromRole="Usuario" ToRole="Factura" />
@@ -396,6 +434,7 @@
         <EntityContainer Name="KN_ProyectoEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Categoria" EntityType="Self.Categoria" />
           <EntitySet Name="Comprador" EntityType="Self.Comprador" />
+          <EntitySet Name="Error" EntityType="Self.Error" />
           <EntitySet Name="Factura" EntityType="Self.Factura" />
           <EntitySet Name="Producto" EntityType="Self.Producto" />
           <EntitySet Name="Rol" EntityType="Self.Rol" />
@@ -429,15 +468,31 @@
             <End Role="Rol" EntitySet="Rol" />
             <End Role="Usuario" EntitySet="Usuario" />
           </AssociationSet>
+          <FunctionImport Name="RegistrarError">
+            <Parameter Name="IdUsuario" Mode="In" Type="Int64" />
+            <Parameter Name="Mensaje" Mode="In" Type="String" />
+            <Parameter Name="Origen" Mode="In" Type="String" />
+          </FunctionImport>
           <FunctionImport Name="SP_ActualizarContrasena">
             <Parameter Name="Correo" Mode="In" Type="String" />
             <Parameter Name="ContrasenaActual" Mode="In" Type="String" />
             <Parameter Name="ContrasenaNueva" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="SP_ActualizarUsuario">
+            <Parameter Name="ID_Usuario" Mode="In" Type="Int64" />
+            <Parameter Name="Id_Rol" Mode="In" Type="Int64" />
+            <Parameter Name="Cedula" Mode="In" Type="String" />
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="Correo" Mode="In" Type="String" />
+            <Parameter Name="Telefono" Mode="In" Type="String" />
+            <Parameter Name="Estado" Mode="In" Type="Boolean" />
+          </FunctionImport>
           <FunctionImport Name="SP_IniciarSesion" ReturnType="Collection(KN_ProyectoModel.SP_IniciarSesion_Result)">
             <Parameter Name="Correo" Mode="In" Type="String" />
             <Parameter Name="Contrasena" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="SP_ListarRoles" ReturnType="Collection(KN_ProyectoModel.SP_ListarRoles_Result)" />
+          <FunctionImport Name="SP_ListarUsuarios" ReturnType="Collection(KN_ProyectoModel.SP_ListarUsuarios_Result)" />
           <FunctionImport Name="SP_RegistrarUsuario">
             <Parameter Name="Cedula" Mode="In" Type="String" />
             <Parameter Name="Nombre" Mode="In" Type="String" />
@@ -445,8 +500,8 @@
             <Parameter Name="Contrasena" Mode="In" Type="String" />
             <Parameter Name="Telefono" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="SP_VerificarCorreo" ReturnType="Collection(String)">
-          <Parameter Name="Correo" Mode="In" Type="String" />
+          <FunctionImport Name="SP_ResetearContrasena" ReturnType="Collection(KN_ProyectoModel.SP_ResetearContrasena_Result)">
+            <Parameter Name="Correo" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="SP_IniciarSesion_Result">
@@ -455,6 +510,23 @@
           <Property Type="String" Name="Contrasena" Nullable="false" MaxLength="100" />
           <Property Type="String" Name="Correo" Nullable="false" MaxLength="100" />
           <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="SP_ListarRoles_Result">
+          <Property Type="Int64" Name="ID_Rol" Nullable="false" />
+          <Property Type="String" Name="Nombre_rol" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="SP_ListarUsuarios_Result">
+          <Property Type="Int64" Name="Id_Usuario" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Cedula" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Correo" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Nombre_rol" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="SP_ResetearContrasena_Result">
+          <Property Type="Int64" Name="ID_Usuario" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Correo" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="NuevaContrasena" Nullable="true" MaxLength="100" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -481,6 +553,17 @@
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Correo" ColumnName="Correo" />
                 <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Error">
+            <EntityTypeMapping TypeName="KN_ProyectoModel.Error">
+              <MappingFragment StoreEntitySet="Error">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+                <ScalarProperty Name="FechaHora" ColumnName="FechaHora" />
+                <ScalarProperty Name="Origen" ColumnName="Origen" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -542,7 +625,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="RegistrarError" FunctionName="KN_ProyectoModel.Store.RegistrarError" />
           <FunctionImportMapping FunctionImportName="SP_ActualizarContrasena" FunctionName="KN_ProyectoModel.Store.SP_ActualizarContrasena" />
+          <FunctionImportMapping FunctionImportName="SP_ActualizarUsuario" FunctionName="KN_ProyectoModel.Store.SP_ActualizarUsuario" />
           <FunctionImportMapping FunctionImportName="SP_IniciarSesion" FunctionName="KN_ProyectoModel.Store.SP_IniciarSesion">
             <ResultMapping>
               <ComplexTypeMapping TypeName="KN_ProyectoModel.SP_IniciarSesion_Result">
@@ -554,8 +639,36 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_ListarRoles" FunctionName="KN_ProyectoModel.Store.SP_ListarRoles">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="KN_ProyectoModel.SP_ListarRoles_Result">
+                <ScalarProperty Name="ID_Rol" ColumnName="ID_Rol" />
+                <ScalarProperty Name="Nombre_rol" ColumnName="Nombre_rol" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_ListarUsuarios" FunctionName="KN_ProyectoModel.Store.SP_ListarUsuarios">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="KN_ProyectoModel.SP_ListarUsuarios_Result">
+                <ScalarProperty Name="Id_Usuario" ColumnName="Id_Usuario" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Cedula" ColumnName="Cedula" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Nombre_rol" ColumnName="Nombre_rol" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_RegistrarUsuario" FunctionName="KN_ProyectoModel.Store.SP_RegistrarUsuario" />
-          <FunctionImportMapping FunctionImportName="SP_VerificarCorreo" FunctionName="KN_ProyectoModel.Store.SP_VerificarCorreo" />
+          <FunctionImportMapping FunctionImportName="SP_ResetearContrasena" FunctionName="KN_ProyectoModel.Store.SP_ResetearContrasena">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="KN_ProyectoModel.SP_ResetearContrasena_Result">
+                <ScalarProperty Name="ID_Usuario" ColumnName="ID_Usuario" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="NuevaContrasena" ColumnName="NuevaContrasena" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

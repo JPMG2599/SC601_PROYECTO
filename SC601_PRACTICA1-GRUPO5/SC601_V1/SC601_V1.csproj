@@ -135,6 +135,9 @@
     <Compile Include="BaseDatos\Comprador.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="BaseDatos\Error.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="BaseDatos\Factura.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -162,6 +165,15 @@
     <Compile Include="BaseDatos\SP_IniciarSesion_Result.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="BaseDatos\SP_ListarRoles_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BaseDatos\SP_ListarUsuarios_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BaseDatos\SP_ResetearContrasena_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="BaseDatos\Usuario.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -174,6 +186,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CambiarContrasenaModel.cs" />
+    <Compile Include="Models\RegistroErrores.cs" />
     <Compile Include="Models\UsuarioModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -237,6 +250,9 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Template\css\styles.css" />
     <Content Include="Template\js\datatables-simple-demo.js" />
+    <Content Include="Template\js\generales.js" />
+    <Content Include="Template\js\jquery.easing.min.js" />
+    <Content Include="Template\js\jquery.min.js" />
     <Content Include="Template\js\scripts.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -255,6 +271,8 @@
     <Content Include="Views\Usuario\RegistrarUsuario.cshtml" />
     <Content Include="Views\Usuario\RecuperarContrasena.cshtml" />
     <Content Include="Views\Usuario\CambiarContrasena.cshtml" />
+    <Content Include="Views\Usuario\AdministrarUsuarios.cshtml" />
+    <Content Include="Views\Usuario\ActualizarUsuario.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

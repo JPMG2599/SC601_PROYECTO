@@ -4,9 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="adcfd0e331a64011a802217ce4b651e1" Name="Diagram1">
+      <Diagram DiagramId="1efe49a32b1c4384bfe73670927545d3" Name="Diagram1">
         <EntityTypeShape EntityType="KN_ProyectoModel.Categoria" Width="1.5" PointX="5.25" PointY="5.5" IsExpanded="true" />
         <EntityTypeShape EntityType="KN_ProyectoModel.Comprador" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="KN_ProyectoModel.Error" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="KN_ProyectoModel.Factura" Width="1.5" PointX="7.5" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="KN_ProyectoModel.Producto" Width="1.5" PointX="7.5" PointY="5.125" IsExpanded="true" />
         <EntityTypeShape EntityType="KN_ProyectoModel.Rol" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
