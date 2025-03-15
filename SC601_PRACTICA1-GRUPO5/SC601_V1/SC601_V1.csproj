@@ -162,6 +162,9 @@
     <Compile Include="BaseDatos\Rol.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="BaseDatos\SP_ConsultarCategorias_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="BaseDatos\SP_IniciarSesion_Result.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -180,12 +183,14 @@
     <Compile Include="BaseDatos\Venta.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CambiarContrasenaModel.cs" />
+    <Compile Include="Models\CategoriaModel.cs" />
     <Compile Include="Models\RegistroErrores.cs" />
     <Compile Include="Models\UsuarioModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -273,10 +278,13 @@
     <Content Include="Views\Usuario\CambiarContrasena.cshtml" />
     <Content Include="Views\Usuario\AdministrarUsuarios.cshtml" />
     <Content Include="Views\Usuario\ActualizarUsuario.cshtml" />
+    <Content Include="Views\Categoria\AgregarCategoria.cshtml" />
+    <Content Include="Views\Categoria\ConsultarCategorias.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Template\img\" />
+    <Folder Include="Views\CategoriaModel\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

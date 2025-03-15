@@ -191,6 +191,7 @@
           <Parameter Name="Telefono" Type="varchar" Mode="In" />
           <Parameter Name="Estado" Type="bit" Mode="In" />
         </Function>
+        <Function Name="SP_ConsultarCategorias" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_IniciarSesion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Correo" Type="varchar" Mode="In" />
           <Parameter Name="Contrasena" Type="varchar" Mode="In" />
@@ -487,6 +488,7 @@
             <Parameter Name="Telefono" Mode="In" Type="String" />
             <Parameter Name="Estado" Mode="In" Type="Boolean" />
           </FunctionImport>
+          <FunctionImport Name="SP_ConsultarCategorias" ReturnType="Collection(KN_ProyectoModel.SP_ConsultarCategorias_Result)" />
           <FunctionImport Name="SP_IniciarSesion" ReturnType="Collection(KN_ProyectoModel.SP_IniciarSesion_Result)">
             <Parameter Name="Correo" Mode="In" Type="String" />
             <Parameter Name="Contrasena" Mode="In" Type="String" />
@@ -504,6 +506,12 @@
             <Parameter Name="Correo" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="SP_ConsultarCategorias_Result">
+          <Property Type="Int64" Name="ID_Categoria" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Descripcion" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Imagen" Nullable="false" MaxLength="200" />
+        </ComplexType>
         <ComplexType Name="SP_IniciarSesion_Result">
           <Property Type="Int64" Name="ID_Usuario" Nullable="false" />
           <Property Type="String" Name="Nombre_rol" Nullable="false" MaxLength="50" />
@@ -628,6 +636,16 @@
           <FunctionImportMapping FunctionImportName="RegistrarError" FunctionName="KN_ProyectoModel.Store.RegistrarError" />
           <FunctionImportMapping FunctionImportName="SP_ActualizarContrasena" FunctionName="KN_ProyectoModel.Store.SP_ActualizarContrasena" />
           <FunctionImportMapping FunctionImportName="SP_ActualizarUsuario" FunctionName="KN_ProyectoModel.Store.SP_ActualizarUsuario" />
+          <FunctionImportMapping FunctionImportName="SP_ConsultarCategorias" FunctionName="KN_ProyectoModel.Store.SP_ConsultarCategorias">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="KN_ProyectoModel.SP_ConsultarCategorias_Result">
+                <ScalarProperty Name="ID_Categoria" ColumnName="ID_Categoria" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_IniciarSesion" FunctionName="KN_ProyectoModel.Store.SP_IniciarSesion">
             <ResultMapping>
               <ComplexTypeMapping TypeName="KN_ProyectoModel.SP_IniciarSesion_Result">

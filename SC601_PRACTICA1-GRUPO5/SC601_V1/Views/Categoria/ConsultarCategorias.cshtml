@@ -1,0 +1,62 @@
+﻿@model List<SC601_V1.BaseDatos.SP_ConsultarCategorias_Result>
+@{
+    ViewBag.Title = "ConsultarCategorias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Consulta de Categorias</h2>
+    <div class="card">
+        <div class="card-header"><i class="fas fa-table me-1"></i> Lista de Categorias</div>
+        <div class="card-body">
+            <div class="Margen">
+                <a class="btn btn-primary" href="@Url.Action("AgregarCategoria","Categoria")"> + Agregar</a>
+            </div>
+
+            <table id="datatablesSimple" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Imagen</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.ID_Categoria</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.Descripcion</td>
+                            <td>@item.Imagen</td>
+
+                            <td><a href="@Url.Action("ActualizarCategoria","Categoria", new { q = item.ID_Categoria })"><i class="fa fa-edit"></i></a></td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+
+        <script src="~/Template/js/jquery.min.js"></script>
+        <script>
+
+            $(document).ready(function () {
+
+                var table = new DataTable('#example', {
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json',
+                    },
+                    columnDefs: [
+                        { "className": "dt-left", "targets": "_all" }
+                    ]
+                });
+
+            });
+
+        </script>
+

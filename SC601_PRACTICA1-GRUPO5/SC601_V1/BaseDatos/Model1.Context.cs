@@ -103,6 +103,11 @@ namespace SC601_V1.BaseDatos
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_ActualizarUsuario", iD_UsuarioParameter, id_RolParameter, cedulaParameter, nombreParameter, correoParameter, telefonoParameter, estadoParameter);
         }
     
+        public virtual ObjectResult<SP_ConsultarCategorias_Result> SP_ConsultarCategorias()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ConsultarCategorias_Result>("SP_ConsultarCategorias");
+        }
+    
         public virtual ObjectResult<SP_IniciarSesion_Result> SP_IniciarSesion(string correo, string contrasena)
         {
             var correoParameter = correo != null ?

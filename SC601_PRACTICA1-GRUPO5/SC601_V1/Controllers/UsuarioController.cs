@@ -23,8 +23,6 @@ namespace SC601_V1.Controllers
         {
             try
             {
-                var d = 0;
-                var r = 10 / d;
                 return View();
             }
             catch (Exception ex)
