@@ -280,6 +280,7 @@
     <Content Include="Views\Usuario\ActualizarUsuario.cshtml" />
     <Content Include="Views\Categoria\AgregarCategoria.cshtml" />
     <Content Include="Views\Categoria\ConsultarCategorias.cshtml" />
+    <Content Include="Views\Categoria\ActualizarCategoria.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
