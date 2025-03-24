@@ -1,0 +1,59 @@
+﻿@model List<SC601_V1.Models.ProductoModel>
+@{
+    ViewBag.Title = "ConsultarP";
+
+}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="m-0 font-weight-bold text-primary">Productos</h5>
+        <a href="@Url.Action("AgregarP", "Producto")" class="btn btn-success">
+            <i class="fa fa-plus"></i> Agregar Producto
+        </a>
+    </div>
+    <table id="example" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Carrito</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.Imagen))
+                        {
+                            <img src="@item.Imagen" alt="Imagen del producto" style="width:100px; height:100px; object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <span>Sin imagen</span>
+                        }
+                    </td>
+
+                    <td>@item.Nombre</td>
+                    <td>@item.Descripcion</td>
+                    <td>@item.Precio</td>
+                    <td>
+                        <a href="@Url.Action("AgregarP","Producto", new { id = item.ID_Producto })"><i class="fa fa-add"></i></a>
+
+
+                        <a href="@Url.Action("ActualizarP", "Producto", new { id = item.ID_Producto })"><i class="fa fa-edit"></i></a>
+
+                        <a href="@Url.Action("Eliminar", "Producto", new { id = item.ID_Producto})"><i class="fa fa-close" style="color:red"></i></a>
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+</div>

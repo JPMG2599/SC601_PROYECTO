@@ -1,0 +1,31 @@
+﻿@model SC601_V1.Models.ProductoModel
+
+@{
+    ViewBag.Title = "Eliminar Producto";
+}
+
+<h3>¿Estás seguro de que deseas eliminar el producto @Model.Nombre?</h3>
+
+<div>
+    <h4>Detalles del Producto</h4>
+    <dl class="dl-horizontal">
+        <dt>ID Producto</dt>
+        <dd>@Model.ID_Producto</dd>
+        <dt>Nombre</dt>
+        <dd>@Model.Nombre</dd>
+        <dt>Descripción</dt>
+        <dd>@Model.Descripcion</dd>
+        <dt>Precio</dt>
+        <dd>@Model.Precio</dd>
+    </dl>
+</div>
+
+@using (Html.BeginForm("EliminarConfirmado", "Producto", new { id = Model.ID_Producto }, FormMethod.Post))
+{
+    <div>
+        <input type="submit" value="Confirmar Eliminación" class="btn btn-danger" />
+
+
+        <a href="@Url.Action("ConsultarP", "Producto")"><i class="btn btn-secondary">Cancelar</i></a>
+    </div>
+}

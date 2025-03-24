@@ -1,0 +1,56 @@
+﻿@model SC601_V1.Models.ProductoModel
+
+@{
+    ViewBag.Title = "AgregarP";
+}
+
+<div class="row">
+    <div class="col-lg-3 col-md-2"></div>
+    <div class="col-lg-6 col-md-8">
+
+        <div class="text-center">
+            <h1 class="h4 text-gray-900 mb-4">Agregar Producto</h1>
+        </div>
+
+        @if (ViewBag.Mensaje != null)
+        {
+            <div class="alert alert-warning msjCentrado">
+                @ViewBag.Mensaje
+            </div>
+        }
+
+        @using (Html.BeginForm("AgregarP", "Producto", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group">
+                <label for="Imagen">Imagen del producto (.jpg)</label>
+                <input type="file" name="Imagen" class="form-control form-control-user" accept="image/*" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="ID_Categoria" class="form-label">Categoría</label>
+                @Html.DropDownListFor(model => model.ID_Categoria, (SelectList)ViewBag.Categoria, new { @class = "form-control" })
+
+            </div>
+
+            <div class="form-group">
+                @Html.TextBoxFor(x => x.Nombre, new { @class = "form-control form-control-user", @placeholder = "Nombre del producto", @Required = "true" })
+            </div><br />
+
+            <div class="form-group">
+                @Html.TextAreaFor(x => x.Descripcion, new { @class = "form-control form-control-user", @placeholder = "Descripción del producto", @Required = "true", @rows = 10, @maxLength = "255" })
+            </div>
+
+            <div class="form-group">
+                @Html.TextBoxFor(x => x.Precio, new { @class = "form-control form-control-user", @placeholder = "Precio del producto", @Required = "true", @type = "number" })
+            </div><br />
+
+                  <div style="width: 200px">
+                      <input type="submit" class="btn btn-danger btn-user btn-block" value="Procesar">
+                      <a href="@Url.Action("ConsultarP", "Producto")"><i class="btn btn-secondary">Cancelar</i></a>
+                  </div>
+        }
+
+
+
+    </div>
+</div>
