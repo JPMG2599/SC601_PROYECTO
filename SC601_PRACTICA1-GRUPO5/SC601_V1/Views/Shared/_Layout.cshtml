@@ -78,9 +78,9 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="">
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
+                            Inicio
                         </a>
 
                         <div class="sb-sidenav-menu-heading">Interface</div>
@@ -96,16 +96,17 @@
                                 <div class="sb-nav-link-icon"><i class="bi bi-person-gear"></i></div>
                                 Agregar producto
                             </a>
+
+                            <a class="nav-link" href="@Url.Action("ConsultarCategorias", "Categoria")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tags"></i></div>
+                                Categorias
+                            </a>
+
                         }
 
                         <a class="nav-link" href="@Url.Action("ConsultarP", "Producto")">
                             <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
                             Productos
-                        </a>
-
-                        <a class="nav-link" href="">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tags"></i></div>
-                            Categorias
                         </a>
 
                         <a class="nav-link" href="">

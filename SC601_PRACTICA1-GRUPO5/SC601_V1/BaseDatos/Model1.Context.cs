@@ -103,9 +103,48 @@ namespace SC601_V1.BaseDatos
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_ActualizarUsuario", iD_UsuarioParameter, id_RolParameter, cedulaParameter, nombreParameter, correoParameter, telefonoParameter, estadoParameter);
         }
     
+        public virtual int sp_AgregarProducto(Nullable<long> iD_Categoria, string nombre, string descripcion, string imagen, Nullable<decimal> precio)
+        {
+            var iD_CategoriaParameter = iD_Categoria.HasValue ?
+                new ObjectParameter("ID_Categoria", iD_Categoria) :
+                new ObjectParameter("ID_Categoria", typeof(long));
+    
+            var nombreParameter = nombre != null ?
+                new ObjectParameter("Nombre", nombre) :
+                new ObjectParameter("Nombre", typeof(string));
+    
+            var descripcionParameter = descripcion != null ?
+                new ObjectParameter("Descripcion", descripcion) :
+                new ObjectParameter("Descripcion", typeof(string));
+    
+            var imagenParameter = imagen != null ?
+                new ObjectParameter("Imagen", imagen) :
+                new ObjectParameter("Imagen", typeof(string));
+    
+            var precioParameter = precio.HasValue ?
+                new ObjectParameter("Precio", precio) :
+                new ObjectParameter("Precio", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_AgregarProducto", iD_CategoriaParameter, nombreParameter, descripcionParameter, imagenParameter, precioParameter);
+        }
+    
+        public virtual ObjectResult<sp_ConsultaProd_Result> sp_ConsultaProd()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_ConsultaProd_Result>("sp_ConsultaProd");
+        }
+    
         public virtual ObjectResult<SP_ConsultarCategorias_Result> SP_ConsultarCategorias()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ConsultarCategorias_Result>("SP_ConsultarCategorias");
+        }
+    
+        public virtual int sp_EliminarProducto(Nullable<long> iD_Producto)
+        {
+            var iD_ProductoParameter = iD_Producto.HasValue ?
+                new ObjectParameter("ID_Producto", iD_Producto) :
+                new ObjectParameter("ID_Producto", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_EliminarProducto", iD_ProductoParameter);
         }
     
         public virtual ObjectResult<SP_IniciarSesion_Result> SP_IniciarSesion(string correo, string contrasena)
@@ -163,45 +202,6 @@ namespace SC601_V1.BaseDatos
                 new ObjectParameter("Correo", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ResetearContrasena_Result>("SP_ResetearContrasena", correoParameter);
-        }
-    
-        public virtual int sp_AgregarProducto(Nullable<long> iD_Categoria, string nombre, string descripcion, string imagen, Nullable<decimal> precio)
-        {
-            var iD_CategoriaParameter = iD_Categoria.HasValue ?
-                new ObjectParameter("ID_Categoria", iD_Categoria) :
-                new ObjectParameter("ID_Categoria", typeof(long));
-    
-            var nombreParameter = nombre != null ?
-                new ObjectParameter("Nombre", nombre) :
-                new ObjectParameter("Nombre", typeof(string));
-    
-            var descripcionParameter = descripcion != null ?
-                new ObjectParameter("Descripcion", descripcion) :
-                new ObjectParameter("Descripcion", typeof(string));
-    
-            var imagenParameter = imagen != null ?
-                new ObjectParameter("Imagen", imagen) :
-                new ObjectParameter("Imagen", typeof(string));
-    
-            var precioParameter = precio.HasValue ?
-                new ObjectParameter("Precio", precio) :
-                new ObjectParameter("Precio", typeof(decimal));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_AgregarProducto", iD_CategoriaParameter, nombreParameter, descripcionParameter, imagenParameter, precioParameter);
-        }
-    
-        public virtual ObjectResult<sp_ConsultaProd_Result> sp_ConsultaProd()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_ConsultaProd_Result>("sp_ConsultaProd");
-        }
-    
-        public virtual int sp_EliminarProducto(Nullable<long> iD_Producto)
-        {
-            var iD_ProductoParameter = iD_Producto.HasValue ?
-                new ObjectParameter("ID_Producto", iD_Producto) :
-                new ObjectParameter("ID_Producto", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_EliminarProducto", iD_ProductoParameter);
         }
     }
 }
