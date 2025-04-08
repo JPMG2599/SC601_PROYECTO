@@ -224,6 +224,7 @@
     <Compile Include="Models\ProductoModel.cs" />
     <Compile Include="Models\RegistroErrores.cs" />
     <Compile Include="Models\UsuarioModel.cs" />
+    <Compile Include="Models\Utilitarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +320,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Imagenes\Productos\" />
     <Folder Include="Template\img\" />
     <Folder Include="Views\CategoriaModel\" />
   </ItemGroup>

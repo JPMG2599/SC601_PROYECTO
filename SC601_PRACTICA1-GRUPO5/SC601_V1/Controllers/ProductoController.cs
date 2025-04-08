@@ -19,6 +19,7 @@ namespace SC601_V1.Controllers
 
         private KN_ProyectoEntities db = new KN_ProyectoEntities();
 
+        #region Producto
         [HttpGet]
         public ActionResult ConsultarP()
         {
@@ -39,6 +40,8 @@ namespace SC601_V1.Controllers
                         Precio = p.Precio,
                         Imagen = p.Imagen
                     }).ToList();
+
+
 
                     return View(productos); // Pasar los productos convertidos a la vista
                 }
@@ -66,53 +69,43 @@ namespace SC601_V1.Controllers
         }
 
         [HttpPost]
-        public ActionResult AgregarP(ProductoModel model, IFormFile Imagen)
+        public ActionResult AgregarP(ProductoModel model, HttpPostedFileBase Imagen)
         {
             try
             {
-                if (Imagen != null && Imagen.Length > 0)
-                {
-                    // Define la ruta de la carpeta 'Template\img' donde se almacenarán las imágenes
-                    string uploadPath = Path.Combine(Server.MapPath("~/Template/img"));
-
-                    // Crea la carpeta si no existe
-                    if (!Directory.Exists(uploadPath))
-                    {
-                        Directory.CreateDirectory(uploadPath);
-                    }
-
-                    // Genera un nombre único para la imagen (puedes usar el GUID o el nombre original)
-                    string imageName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
-
-                    // Define la ruta completa donde se guardará la imagen
-                    string filePath = Path.Combine(uploadPath, imageName);
-
-                    // Guarda la imagen en la carpeta
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        Imagen.CopyTo(stream);
-                    }
-
-                    // Guarda solo la ruta relativa de la imagen en la base de datos
-                    model.Imagen = "/Template/img/" + imageName;  // Usamos la ruta relativa que será accesible desde la web
-                }
-
                 // Guardar el resto del producto en la base de datos
                 using (var context = new KN_ProyectoEntities())
                 {
-                    context.Producto.Add(new Producto
-                    {
-                        Nombre = model.Nombre,
-                        Descripcion = model.Descripcion,
-                        Precio = model.Precio,
-                        Imagen = model.Imagen,
-                        ID_Categoria = model.ID_Categoria
-                    });
+                    Producto prod = new Producto();
+                    prod.Nombre = model.Nombre;
+                    prod.Descripcion = model.Descripcion;
+                    prod.Precio = model.Precio;
+                    prod.Imagen = model.Imagen;
+                    prod.ID_Categoria = model.ID_Categoria;
 
-                    context.SaveChanges();
+                    context.Producto.Add(prod);
+
+                    var result = context.SaveChanges();
+
+                    if (result > 0)
+                    {
+                        // Guardar la Imagen
+                        string extension = Path.GetExtension(Imagen.FileName);
+                        string ruta = Utilitarios.RutaProductos + prod.ID_Producto + extension;
+
+                        Imagen.SaveAs(ruta);
+
+                        prod.Imagen = "/Imagenes/Productos/" + prod.ID_Producto + extension;
+                        context.SaveChanges();
+                        return RedirectToAction("ConsultarP"); // Redirige después de guardar el producto
+                    }
+                    else
+                    {
+                        ViewBag.Mensaje = "La información no se ha podido registrar correctamente.";
+                        return View();
+                    }
                 }
 
-                return RedirectToAction("ConsultarP"); // Redirige después de guardar el producto
             }
             catch (Exception ex)
             {
@@ -120,6 +113,8 @@ namespace SC601_V1.Controllers
                 return View();
             }
         }
+
+        // GET: Actualizar Producto
         [HttpGet]
         public ActionResult ActualizarP(int id)
         {
@@ -144,8 +139,7 @@ namespace SC601_V1.Controllers
                                             })
                                             .ToList();
 
-                    // Crear el SelectList con el modelo CategoriaModel
-                    ViewBag.Categoria = new SelectList(categorias, "ID_Categoria", "Nombre", producto.ID_Categoria);
+                    cargarComboCategorias(producto.ID_Categoria);
 
                     // Convertir el producto a ProductoModel
                     var productoModel = new ProductoModel
@@ -154,7 +148,8 @@ namespace SC601_V1.Controllers
                         Nombre = producto.Nombre,
                         Descripcion = producto.Descripcion,
                         Precio = producto.Precio,
-                        ID_Categoria = producto.ID_Categoria
+                        ID_Categoria = producto.ID_Categoria,
+                        Imagen = producto.Imagen
                     };
 
                     return View(productoModel);
@@ -167,41 +162,57 @@ namespace SC601_V1.Controllers
             }
         }
 
-
-
-
-
+        // POST: Actualizar Producto
         [HttpPost]
-        public ActionResult ActualizarP(ProductoModel model)
+        public ActionResult ActualizarP(Producto model, HttpPostedFileBase Imagen)
         {
             try
             {
                 using (var context = new KN_ProyectoEntities())
                 {
-                    var producto = context.Producto.Find(model.ID_Producto);
-                    if (producto == null) return HttpNotFound();
+                    var producto = context.Producto.Where(x => x.ID_Producto == model.ID_Producto).FirstOrDefault();
 
+                    producto.ID_Categoria = model.ID_Categoria;
                     producto.Nombre = model.Nombre;
                     producto.Descripcion = model.Descripcion;
                     producto.Precio = model.Precio;
+                    producto.Activo = model.Activo;
 
-                    // Actualiza imagen solo si se sube una nueva
-                    if (model.Imagen != null)
+                    // Si debemos actualizar la imagen
+                    if (Imagen != null)
                     {
-                        producto.Imagen = model.Imagen;
+                        // Guardar la imagen
+                        string extension = Path.GetExtension(Imagen.FileName);
+                        string ruta = Utilitarios.RutaProductos + producto.ID_Producto + extension;
+
+                        // Eliminamos la imagen existente para reemplazarla
+                        if (producto.Imagen != null) 
+                            System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + producto.Imagen);
+                        
+                        // Guardamos la imagen en la carpeta
+                        Imagen.SaveAs(ruta);
+
+                        producto.Imagen = "/Imagenes/Productos/" + producto.ID_Producto + extension;
                     }
 
-                    context.SaveChanges();
+                    var result = context.SaveChanges();
+
+                    return RedirectToAction("ConsultarP");
+                    
                 }
-                return RedirectToAction("ConsultarP");
             }
             catch (Exception ex)
             {
-                ViewBag.Error = "Error al actualizar el producto: " + ex.Message;
-                return View(model);
-            }
-        }
+                Exception realError = ex;
+                while (realError.InnerException != null)
+                    realError = realError.InnerException;
 
+                ViewBag.Error = "Error al actualizar el producto: " + ex.Message + " | Detalle real: " + realError.Message;
+                return View("Error");
+            }
+
+        }
+        #endregion
 
         [HttpGet]
         public ActionResult Eliminar(int id)
@@ -244,7 +255,22 @@ namespace SC601_V1.Controllers
                 return RedirectToAction("ConsultarP");
             }
         }
+        private void cargarComboCategorias(long? selectedId = null)
+        {
+            using (var context = new KN_ProyectoEntities())
+            {
+                var comboCategorias = context.Categoria
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.ID_Categoria.ToString(),
+                        Text = c.Nombre,
+                        Selected = (selectedId != null && c.ID_Categoria == selectedId)
+                    })
+                    .ToList();
 
+                ViewBag.Categoria = comboCategorias ?? new List<SelectListItem>();
+            }
+        }
 
     }
 

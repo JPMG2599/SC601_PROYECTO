@@ -16,6 +16,7 @@ namespace SC601_V1.Controllers
     public class UsuarioController : Controller
     {
         RegistroErrores error = new RegistroErrores();
+        Utilitarios util = new Utilitarios();
 
         #region IniciarSesion
         // GET: Mostrar Inicio de Sesión
@@ -103,7 +104,8 @@ namespace SC601_V1.Controllers
                     if (info != null)
                     {
                         Session["Correo"] = model.Correo;
-                        var notificacion = EnviarCorreo(info, "Recuperar Contraseña");
+                        string mensaje = $"Hola {info.Nombre}, por favor utilice el siguiente código para ingresar al sistema: {info.NuevaContrasena}";
+                        var notificacion = util.EnviarCorreo(info.Correo, "Recuperar Contraseña", mensaje);
 
                         if (notificacion)
                             return RedirectToAction("CambiarContrasena", "Usuario");
@@ -354,24 +356,5 @@ namespace SC601_V1.Controllers
 
         }
 
-        private bool EnviarCorreo(SP_ResetearContrasena_Result info, string titulo)
-        {
-            string cuenta = ConfigurationManager.AppSettings["CorreoNotificaciones"].ToString();
-            string contrasenna = ConfigurationManager.AppSettings["ContrasennaNotificaciones"].ToString();
-
-            MailMessage message = new MailMessage();
-            message.From = new MailAddress(cuenta);
-            message.To.Add(new MailAddress(info.Correo));
-            message.Subject = titulo;
-            message.Body = $"Hola {info.Nombre}, por favor utilice el siguiente código para ingresar al sistema: {info.NuevaContrasena}";
-            message.Priority = MailPriority.Normal;
-            message.IsBodyHtml = true;
-
-            SmtpClient client = new SmtpClient("smtp.office365.com", 587);
-            client.Credentials = new System.Net.NetworkCredential(cuenta, contrasenna);
-            client.EnableSsl = true;
-            client.Send(message);
-            return true;
-        }
     }
 }

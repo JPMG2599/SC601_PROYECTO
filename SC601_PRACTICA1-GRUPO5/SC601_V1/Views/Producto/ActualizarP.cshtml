@@ -6,9 +6,10 @@
 
 <h2>Actualizar Producto</h2>
 
-@using (Html.BeginForm("ActualizarP", "Producto", FormMethod.Post))
+@using (Html.BeginForm("ActualizarP", "Producto", FormMethod.Post, new { @enctype = "multipart/form-data" }))
 {
     @Html.HiddenFor(model => model.ID_Producto)
+    @Html.HiddenFor(x => x.Imagen, new { @class = "form-control form-control-user" })
 
     <div class="form-group">
         @Html.LabelFor(model => model.Nombre)
@@ -27,11 +28,24 @@
 
     <div class="form-group">
         @Html.LabelFor(model => model.ID_Categoria)
-        @Html.DropDownListFor(model => model.ID_Categoria, (SelectList)ViewBag.Categoria, new { @class = "form-control" })
+        @Html.DropDownListFor(model => model.ID_Categoria, (IEnumerable<SelectListItem>)ViewBag.Categoria, new { @class = "form-control" })
     </div>
 
     <div class="form-group">
+        <label for="Imagen">Imagen del producto (.jpg)</label>
+        <input type="file" name="Imagen" class="form-control form-control-user" accept="image/*" required />
+    </div>
+
+    <br />
+
+    <div class="form-check form-group">
+        <img class="card-img-top" src="@Model.Imagen" style="width:30%; height:120px;" alt="Imagen No cargada" />
+    </div>
+
+    <br />
+
+    <div class="form-group">
         <input type="submit" value="Actualizar" class="btn btn-primary" />
-        <a href="@Url.Action("ConsultarP", "Producto")"><i class="btn btn-secondary">Cancelar</i></a>
+        <a href="@Url.Action("ConsultarP", "Producto")" class="btn btn-secondary">Cancelar</a>
     </div>
 }
