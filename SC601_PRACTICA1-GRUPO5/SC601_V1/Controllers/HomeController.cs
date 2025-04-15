@@ -12,5 +12,10 @@ namespace SC601_V1.Controllers
         {
             return View();
         }
+
+        public ActionResult Error()
+        {
+            return View();
+        }
     }
 }

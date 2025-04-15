@@ -16,7 +16,7 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap4.css" rel="stylesheet" />
-
+    <link href="~/Template/css/generales.css" rel="stylesheet" />
 </head>
 
 
@@ -48,6 +48,15 @@
                 <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
             </div>
         </form>
+
+        <!-- Carrito Botón -->
+        @if (rol != "Invitad@")
+        {
+            <a class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="@Url.Action("VerCarrito", "Carrito")">
+                <i class="bi bi-cart-fill fs-5" style="color: #9B9D9E;" onmouseover="this.style.color='#C7C8C9'"
+                   onmouseout="this.style.color='#9B9D9E'"></i>
+            </a>
+        }
 
         <!-- Navbar-->
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">

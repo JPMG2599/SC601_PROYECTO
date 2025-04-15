@@ -1,0 +1,101 @@
+﻿@model List<SC601_V1.Models.CarritoModel>
+
+@{
+    ViewBag.Title = "VerCarrito";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-4">
+    <h2 class="mb-4">Mi Carrito</h2>
+    <div class="card">
+        <div class="card-header"><i class="fas fa-table me-1"></i> Lista de Productos</div>
+        <div class="card-body">
+
+            <table id="datatablesSimple" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>@item.precio</td>
+                            <td>@item.cantidad</td>
+                            <td>@(item.cantidad * item.precio)</td>
+                            <td><a href="@Url.Action("EliminarItem", "Carrito", new {q = item.Producto_ID})"><i class="fas fa-trash-alt"></i></a></td>
+                        </tr>
+                    }
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th colspan="3" class="text-end">Total:</th>
+                        <th></th> <!-- aquí se mostrará el total -->
+                        <th></th> <!-- para alinear con columna Acción -->
+                    </tr>
+                </tfoot>
+
+
+            </table>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="card-footer d-flex justify-content-end pt-3" style="border-top: none; background-color: transparent">
+                <a type="submit" class="btn btn-success" href="@Url.Action("Index","Home")">
+                    Pagar
+                </a>
+        </div>
+    }
+</div>
+
+<script src="~/Template/js/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        var table = new DataTable('#datatablesSimple', {
+            paging: true, // quitar la paginación
+            searching: false,  // quitar buscador
+            info: false, // qitar el texto de "Mostrando 1 de 1"
+            lengthChange: false, // Quitar la cantidad de registros
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json',
+            },
+            columnDefs: [
+                { "className": "dt-left", "targets": "_all" }
+            ],
+            footerCallback: function (row, data, start, end, display) {
+                var api = this.api();
+
+                // Columna de "Total", suponiendo que es la cuarta (índice 3)
+                var total = api
+                    .column(3, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        // Remover símbolos como "$" y comas si los hay
+                        a = typeof a === 'string' ? a.replace(/[\$,]/g, '') : a;
+                        b = typeof b === 'string' ? b.replace(/[\$,]/g, '') : b;
+
+                        return parseFloat(a) + parseFloat(b);
+                    }, 0);
+
+                // Mostrar total formateado
+                $(api.column(3).footer()).html('₡ ' + total.toLocaleString('es-CR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+            }
+        });
+
+    });
+
+</script>

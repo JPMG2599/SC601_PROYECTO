@@ -34,6 +34,16 @@
                     <td>
                         @if (!esInvitado)
                         {
+                            <!-- Botón para agregar un producto al carrito -->
+                            <form method="post" class="formAgregarCarrito">
+                                @Html.Hidden("Producto_ID", item.ID_Producto)
+                                @Html.Hidden("cantidad", 1)
+                                <button type="submit" class="btn btn-link" title="Agregar al carrito">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </form>
+                            <!-- Fin Botón carrito -->
+
                             <a href="@Url.Action("AgregarP", "Producto", new { id = item.ID_Producto })"><i class="fa fa-add"></i></a>
                             <a href="@Url.Action("ActualizarP", "Producto", new { id = item.ID_Producto })"><i class="fa fa-edit"></i></a>
                             <a href="@Url.Action("Eliminar", "Producto", new { id = item.ID_Producto})"><i class="fa fa-close" style="color:red"></i></a>
@@ -48,3 +58,50 @@
         </tbody>
     </table>
 </div>
+
+<!-- Mensaje de confirmación tras agregar producto al carrito -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Producto agregado al carrito correctamente.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+    </div>
+</div>
+<!-- Fin de mensaje de confirmación -->
+
+
+<!-- Script para que botón de agregar al carrito -->
+<script src="~/Template/js/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".formAgregarCarrito").submit(function (e) {
+            e.preventDefault();
+
+            const form = $(this);
+            const data = form.serialize(); // toma todos los campos del modelo
+
+            $.ajax({
+                url: '/Carrito/AgregarItem',
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    if (response.redirectToError) {
+                        window.location.href = "/Home/Error"
+                        return;
+                    }
+
+                    if (response.success) {
+                        const toastEl = document.querySelector('.toast');
+                        if (toastEl) {
+                            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                            toast.show();
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>
