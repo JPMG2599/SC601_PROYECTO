@@ -19,7 +19,7 @@
             </div>
         }
 
-        @using (Html.BeginForm("AgregarCategoria", "Categoria"))
+        @using (Html.BeginForm("AgregarCategoria", "Categoria", FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
             <div class="form-group">
                 @Html.TextBoxFor(x => x.Nombre, new { @class = "form-control form-control-user", @placeholder = "Nombre", @Required = "true" })
@@ -29,7 +29,8 @@
             </div>
 
             <div class="form-group">
-                @Html.TextBoxFor(x => x.Imagen, new { @class = "form-control form-control-user", @placeholder = "Imagen", @Required = "true" })
+                <label for="Imagen">Imagen de la categoria (.jpg)</label>
+                <input type="file" name="ImagenCategoria" class="form-control form-control-user" accept="image/*" required>
             </div>
 
             <div style="text-align: right; width: 200px">

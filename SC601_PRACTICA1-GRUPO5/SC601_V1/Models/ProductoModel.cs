@@ -16,7 +16,6 @@ namespace SC601_V1.Models
         // Guarda solo la ruta como string
         public string Imagen { get; set; }
 
-        
     }
 
 }

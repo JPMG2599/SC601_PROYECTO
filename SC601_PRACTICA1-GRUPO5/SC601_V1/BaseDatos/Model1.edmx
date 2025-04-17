@@ -12,7 +12,7 @@
           <Property Name="ID_Categoria" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Descripcion" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Imagen" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Imagen" Type="varchar(max)" Nullable="false" />
           <Property Name="Activo" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Comprador">
@@ -269,7 +269,7 @@
           <Property Name="ID_Categoria" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Imagen" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Imagen" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Producto" Relationship="Self.FK_Producto_Categoria" FromRole="Categoria" ToRole="Producto" />
         </EntityType>
@@ -541,7 +541,7 @@
           <Property Type="Int64" Name="ID_Categoria" Nullable="false" />
           <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
           <Property Type="String" Name="Descripcion" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="Imagen" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Imagen" Nullable="false" />
         </ComplexType>
         <ComplexType Name="SP_IniciarSesion_Result">
           <Property Type="Int64" Name="ID_Usuario" Nullable="false" />
