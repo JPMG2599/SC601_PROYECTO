@@ -20,10 +20,7 @@
 
                 @using (Html.BeginForm("AgregarP", "Producto", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
-                    <div class="form-group mb-3">
 
-                        <input type="file" name="Imagen" class="form-control form-control-user" accept="image/*" required>
-                    </div>
 
                     <div class="form-floating mb-3">
                         @Html.DropDownListFor(model => model.ID_Categoria, new List<SelectListItem> {
@@ -37,7 +34,7 @@
                     <div class="form-group mb-3">
                         @Html.TextBoxFor(x => x.Nombre, new { @class = "form-control form-control-user", @placeholder = "Nombre del producto", @Required = "true" })
                     </div>
-                    
+
 
 
 
@@ -48,10 +45,14 @@
                     <div class="form-group mb-3">
                         @Html.TextBoxFor(x => x.Precio, new { @class = "form-control form-control-user", @placeholder = "Precio del producto", @Required = "true", @type = "number" })
                     </div>
+                    <div class="form-group mb-3">
+
+                        <input type="file" name="Imagen" class="form-control form-control-user" accept="image/*" required>
+                    </div>
 
                     <div style="width: 200px">
                         <input type="submit" class="btn btn-primary btn-user btn-block" value="Procesar">
-                        <a href="@Url.Action("ConsultarP", "Producto")"><i class="btn btn-secondary">Cancelar</i></a>
+                        <a href="@Request.UrlReferrer" class="btn btn-secondary">Cancelar</a>
                     </div>
                 }
 

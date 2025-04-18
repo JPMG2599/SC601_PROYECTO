@@ -1,45 +1,58 @@
 ﻿@model SC601_V1.BaseDatos.Categoria
 
 @{
-    ViewBag.Title = "AgregarPuesto";
+    ViewBag.Title = "Actualizar Categoría";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-lg-3 col-md-2"></div>
-    <div class="col-lg-6 col-md-8">
+<div class="row justify-content-center">
+    <div class="col-lg-7">
 
-        <div class="text-center">
-            <h1 class="h4 text-gray-900 mb-4">Actualizar Categoria</h1>
+        <div class="card shadow-lg border-0 rounded-lg mt-5">
+            <div class="card-header">
+                <h3 class="text-center font-weight-light my-4">Actualizar Categoría</h3>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Mensaje != null)
+                {
+                    <div class="alert alert-warning text-center">
+                        @ViewBag.Mensaje
+                    </div>
+                }
+
+                @using (Html.BeginForm("ActualizarCategoria", "Categoria", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.HiddenFor(x => x.ID_Categoria)
+
+                    <!-- Nombre -->
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Nombre, new { @class = "form-control", placeholder = "Nombre de categoría", required = "true" })
+                        @Html.LabelFor(x => x.Nombre)
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Descripcion, new { @class = "form-control", placeholder = "Descripción", required = "true" })
+                        @Html.LabelFor(x => x.Descripcion)
+                    </div>
+
+                    <!-- Imagen -->
+                    <div class="mb-3">
+                        
+                        <input type="file" name="ImagenCategoria" id="inputImagen" class="form-control" accept="image/*" />
+                    </div>
+
+                   
+
+
+
+                    <!-- Botones -->
+                    <div class="form-floating mb-3">
+                        <input type="submit" value="Actualizar" class="btn btn-primary" />
+                        <a href="@Request.UrlReferrer" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                }
+            </div>
         </div>
-
-        @if (ViewBag.Mensaje != null)
-        {
-            <div class="alert alert-warning msjCentrado">
-                @ViewBag.Mensaje
-            </div>
-        }
-
-        @using (Html.BeginForm("ActualizarCategoria", "Categoria", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            @Html.HiddenFor(x => x.ID_Categoria, new { @class = "form-control form-control-user", @placeholder = "ID_Categoria", @Required = "true" })
-
-            <div class="form-group">
-                @Html.TextBoxFor(x => x.Nombre, new { @class = "form-control form-control-user", @placeholder = "Nombre", @Required = "true" })
-            </div>
-            <div class="form-group">
-                @Html.TextAreaFor(x => x.Descripcion, new { @class = "form-control form-control-user", @placeholder = "Descripción", @Required = "true", @rows = 10, @maxLength = "255" })
-            </div>
-            <div class="form-group">
-                <label for="Imagen">Imagen de la categoria (.jpg)</label>
-                <input type="file" name="ImagenCategoria" class="form-control form-control-user" accept="image/*" required>
-            </div>
-
-
-            <div style="text-align: right; width: 200px">
-                <input type="submit" class="btn btn-danger btn-user btn-block" value="Procesar">
-            </div>
-        }
-
     </div>
 </div>
