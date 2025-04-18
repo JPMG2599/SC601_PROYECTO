@@ -321,6 +321,7 @@
     <Content Include="Views\Producto\ConsultarP.cshtml" />
     <Content Include="Views\Producto\Eliminar.cshtml" />
     <Content Include="Views\Carrito\VerCarrito.cshtml" />
+    <Content Include="Views\Producto\Catalogo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

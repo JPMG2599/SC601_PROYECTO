@@ -1,0 +1,100 @@
+﻿@model List<SC601_V1.Models.ProductoModel>
+
+@{
+    ViewBag.Title = "Catálogo de Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var esInvitado = Session["Rol"] == null || Session["Rol"].ToString().Trim().Equals("Invitado", StringComparison.OrdinalIgnoreCase);
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Catálogo de Productos</h2>
+
+    <!-- Grid de productos -->
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="card mb-4 h-100 shadow-sm">
+                        <!-- Imagen -->
+                        <img class="card-img-top"
+                             src="@(string.IsNullOrEmpty(item.Imagen) ? "/imagenes/no-disponible.jpg" : item.Imagen)"
+                             alt="@item.Nombre"
+                             style="height: 220px; object-fit: cover;" />
+
+                        <!-- Cuerpo del card -->
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@item.Nombre</h5>
+                            <p class="text-muted">@item.Descripcion</p>
+                            <p class="fw-bold">₡@item.Precio.ToString("N2")</p>
+
+                            <!-- Botón agregar al carrito -->
+                            @if (!esInvitado)
+                            {
+                                <form method="post" class="formAgregarCarrito mt-auto">
+                                    @Html.Hidden("Producto_ID", item.ID_Producto)
+                                    @Html.Hidden("cantidad", 1)
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-cart-plus"></i> Agregar al carrito
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <div class="alert alert-warning">
+                    No hay productos disponibles actualmente.
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Mensaje de confirmación tras agregar producto al carrito -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Producto agregado al carrito correctamente.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+    </div>
+</div>
+<!-- Fin de mensaje de confirmación -->
+<script src="~/Template/js/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".formAgregarCarrito").submit(function (e) {
+            e.preventDefault();
+            const form = $(this);
+            const data = form.serialize();
+
+            $.ajax({
+                url: '/Carrito/AgregarItem',
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    if (response.redirectToError) {
+                        window.location.href = "/Home/Error";
+                        return;
+                    }
+                    if (response.success) {
+                        const toastEl = document.querySelector('.toast');
+                        if (toastEl) {
+                            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                            toast.show();
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>

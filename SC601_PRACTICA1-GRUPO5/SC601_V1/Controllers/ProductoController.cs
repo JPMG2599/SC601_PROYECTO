@@ -16,6 +16,8 @@ namespace SC601_V1.Controllers
 
     public class ProductoController : Controller
     {
+        RegistroErrores error = new RegistroErrores();
+        Utilitarios util = new Utilitarios();
 
         private KN_ProyectoEntities db = new KN_ProyectoEntities();
 
@@ -27,15 +29,15 @@ namespace SC601_V1.Controllers
             {
                 using (var context = new KN_ProyectoEntities())
                 {
-                    // Obtener los resultados del procedimiento almacenado
+                    
                     var info = context.sp_ConsultaProd().ToList();
 
-                    // Convertir el resultado a una lista de ProductoModel
+                    
                     var productos = info.Select(p => new ProductoModel
                     {
-                        ID_Producto = p.ID_Producto,        // Asegúrate de que estos campos coincidan
-                        ID_Categoria = p.ID_Categoria,      // con los nombres de las propiedades
-                        Nombre = p.Nombre,                  // en ProductoModel
+                        ID_Producto = p.ID_Producto,        
+                        ID_Categoria = p.ID_Categoria,      
+                        Nombre = p.Nombre,                 
                         Descripcion = p.Descripcion,
                         Precio = p.Precio,
                         Imagen = p.Imagen
@@ -43,13 +45,17 @@ namespace SC601_V1.Controllers
 
 
 
-                    return View(productos); // Pasar los productos convertidos a la vista
+                    return View(productos);
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de excepciones (opcional, puedes loguear el error)
-                return View();
+                Exception realError = ex;
+                while (realError.InnerException != null)
+                    realError = realError.InnerException;
+
+                ViewBag.Error = "Error al visualizar los producto: " + ex.Message + " | Detalle real: " + realError.Message;
+                return View("Error");
             }
         }
 
@@ -58,10 +64,9 @@ namespace SC601_V1.Controllers
         {
             using (var context = new KN_ProyectoEntities())
             {
-                // Obtener las categorías desde la base de datos
-                var categorias = context.Categoria.ToList(); // Asegúrate de que 'Categorias' es la tabla correcta
-
-                // Si hay categorías, pasarlas a ViewBag
+                
+                var categorias = context.Categoria.ToList(); 
+                
                 ViewBag.Categoria = new SelectList(categorias, "ID_Categoria", "Nombre");
 
                 return View();
@@ -73,7 +78,7 @@ namespace SC601_V1.Controllers
         {
             try
             {
-                // Guardar el resto del producto en la base de datos
+                
                 using (var context = new KN_ProyectoEntities())
                 {
                     Producto prod = new Producto();
@@ -89,7 +94,7 @@ namespace SC601_V1.Controllers
 
                     if (result > 0)
                     {
-                        // Guardar la Imagen
+                        
                         string extension = Path.GetExtension(Imagen.FileName);
                         string ruta = Utilitarios.RutaProductos + prod.ID_Producto + extension;
 
@@ -109,8 +114,12 @@ namespace SC601_V1.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.Error = "Error al guardar el producto: " + ex.Message;
-                return View();
+                Exception realError = ex;
+                while (realError.InnerException != null)
+                    realError = realError.InnerException;
+
+                ViewBag.Error = "Error al agregar el producto: " + ex.Message + " | Detalle real: " + realError.Message;
+                return View("Error");
             }
         }
 
@@ -122,7 +131,7 @@ namespace SC601_V1.Controllers
             {
                 using (var context = new KN_ProyectoEntities())
                 {
-                    // Obtener el producto por ID
+                    
                     var producto = context.Producto.FirstOrDefault(p => p.ID_Producto == id);
 
                     if (producto == null)
@@ -130,7 +139,7 @@ namespace SC601_V1.Controllers
                         return HttpNotFound();
                     }
 
-                    // Obtener las categorías de la base de datos y convertirlas a CategoriaModel
+                   
                     var categorias = context.Categoria
                                             .Select(c => new CategoriaModel
                                             {
@@ -141,7 +150,7 @@ namespace SC601_V1.Controllers
 
                     cargarComboCategorias(producto.ID_Categoria);
 
-                    // Convertir el producto a ProductoModel
+                    
                     var productoModel = new ProductoModel
                     {
                         ID_Producto = producto.ID_Producto,
@@ -157,8 +166,12 @@ namespace SC601_V1.Controllers
             }
             catch (Exception ex)
             {
-                // Manejo de errores
-                return View();
+                Exception realError = ex;
+                while (realError.InnerException != null)
+                    realError = realError.InnerException;
+
+                ViewBag.Error = "Error: " + ex.Message + " | Detalle real: " + realError.Message;
+                return View("Error");
             }
         }
 
@@ -176,9 +189,9 @@ namespace SC601_V1.Controllers
                     producto.Nombre = model.Nombre;
                     producto.Descripcion = model.Descripcion;
                     producto.Precio = model.Precio;
-                    producto.Activo = model.Activo;
+                    //producto.Activo = model.Activo;
 
-                    // Si debemos actualizar la imagen
+                   
                     if (Imagen != null)
                     {
                         // Guardar la imagen
@@ -214,6 +227,7 @@ namespace SC601_V1.Controllers
         }
         #endregion
 
+        // GET: ELIMINAR
         [HttpGet]
         public ActionResult Eliminar(int id)
         {
@@ -271,6 +285,40 @@ namespace SC601_V1.Controllers
                 ViewBag.Categoria = comboCategorias ?? new List<SelectListItem>();
             }
         }
+        // GET: CATALOGO
+        [HttpGet]
+        public ActionResult Catalogo()
+        {
+            try
+            { 
+            using (var context = new KN_ProyectoEntities())
+            {
+                var info = context.sp_ConsultaProd().ToList();
+
+                var productos = info
+                    .Where(p => p.Activo == true)
+                    .Select(p => new ProductoModel
+                    {
+                        ID_Producto = p.ID_Producto,
+                        Nombre = p.Nombre,
+                        Descripcion = p.Descripcion,
+                        Precio = p.Precio,
+                        Imagen = p.Imagen,
+                        ID_Categoria = p.ID_Categoria
+                    })
+                    .ToList();
+
+                return View(productos);
+            }
+            }
+            catch (Exception ex)
+            {
+                error.RegistrarError(ex.Message, "Get Catalogo");
+                return View("Error");
+            }
+        }
+
+
 
     }
 

@@ -1,62 +1,52 @@
 ﻿@model List<SC601_V1.Models.ProductoModel>
 @{
     ViewBag.Title = "ConsultarP";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var esInvitado = Session["Rol"] == null || Session["Rol"].ToString().Trim().Equals("Invitado", StringComparison.OrdinalIgnoreCase);
 }
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="m-0 font-weight-bold text-primary">Productos</h5>
-        @if (!esInvitado)
-        {
-            <a href="@Url.Action("AgregarP", "Producto")" class="btn btn-success">
-                <i class="fa fa-plus"></i> Agregar Producto
-            </a>
-        }
+<div class="container mt-4">
+    <h2 class="mb-4">Administración de Productos</h2>
+    <div class="card">
+        
+        
+
+        <div class="card-body">
+            <table id="datatablesProducto" class="table table-striped">
+                
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>@item.Descripcion</td>
+                            <td>@item.Precio</td>
+                            <td>
+                                @if (!esInvitado)
+                                {
+                                   
+                                    <a href="@Url.Action("ActualizarP", "Producto", new { id = item.ID_Producto })"><i class="fa fa-edit"></i></a>
+                                    <a href="@Url.Action("Eliminar", "Producto", new { id = item.ID_Producto })"><i class="fa fa-close" style="color:red"></i></a>
+                                }
+                                else
+                                {
+                                    <span style="color:gray">Acciones no disponibles</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-
-    <table id="example" class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Carrito</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Nombre</td>
-                    <td>@item.Descripcion</td>
-                    <td>@item.Precio</td>
-                    <td>
-                        @if (!esInvitado)
-                        {
-                            <!-- Botón para agregar un producto al carrito -->
-                            <form method="post" class="formAgregarCarrito">
-                                @Html.Hidden("Producto_ID", item.ID_Producto)
-                                @Html.Hidden("cantidad", 1)
-                                <button type="submit" class="btn btn-link" title="Agregar al carrito">
-                                    <i class="fas fa-cart-plus"></i>
-                                </button>
-                            </form>
-                            <!-- Fin Botón carrito -->
-
-                            <a href="@Url.Action("AgregarP", "Producto", new { id = item.ID_Producto })"><i class="fa fa-add"></i></a>
-                            <a href="@Url.Action("ActualizarP", "Producto", new { id = item.ID_Producto })"><i class="fa fa-edit"></i></a>
-                            <a href="@Url.Action("Eliminar", "Producto", new { id = item.ID_Producto})"><i class="fa fa-close" style="color:red"></i></a>
-                        }
-                        else
-                        {
-                            <span style="color:gray">Acciones no disponibles</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </div>
 
 <!-- Mensaje de confirmación tras agregar producto al carrito -->
@@ -71,37 +61,45 @@
     </div>
 </div>
 <!-- Fin de mensaje de confirmación -->
-
-
 <!-- Script para que botón de agregar al carrito -->
 <script src="~/Template/js/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $(".formAgregarCarrito").submit(function (e) {
-            e.preventDefault();
+@if (!esInvitado)
+{
+    <script>
+        $(document).ready(function () {
+            const tabla = new DataTable('#datatablesProducto', {
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json',
+                },
+                lengthChange: false,
+                paging: true,
+                pagingType: "simple",  // solo muestra Anterior / Siguiente
+                info: false,
+                pageLength: 10, // cantidad datos x pag
+                columnDefs: [
+                    { className: "dt-left", targets: "_all" }
+                ]
+            });
 
-            const form = $(this);
-            const data = form.serialize(); // toma todos los campos del modelo
 
-            $.ajax({
-                url: '/Carrito/AgregarItem',
-                type: 'POST',
-                data: data,
-                success: function (response) {
-                    if (response.redirectToError) {
-                        window.location.href = "/Home/Error"
-                        return;
-                    }
+            // Esperar a que DataTables construya su DOM
+            tabla.on('init',function () {
+                const boton = $('<a>')
+                    .attr('href', '@Url.Action("AgregarP", "Producto")')
+                    .addClass('btn btn-primary me-2')
+                    .html('<i class="fa fa-plus"></i> Agregar Producto');
 
-                    if (response.success) {
-                        const toastEl = document.querySelector('.toast');
-                        if (toastEl) {
-                            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
-                            toast.show();
-                        }
-                    }
-                }
+                // Insertar SOLO en la primera fila superior
+                const filaSuperior = $('#datatablesProducto_wrapper .row.justify-content-between').first();
+
+                filaSuperior.prepend(
+                    $('<div class="col-auto"></div>').append(boton)
+                );
             });
         });
-    });
-</script>
+    </script>
+}
+
+
+
+
