@@ -2,18 +2,15 @@
 @{
     ViewBag.Title = "ConsultarCategorias";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var esInvitado = Session["Rol"] == null || Session["Rol"].ToString().Trim().Equals("Invitado", StringComparison.OrdinalIgnoreCase);
 }
 
-<div class="container mt-4"/>
+<div class="container mt-4">
     <h2 class="mb-4">Consulta de Categorias</h2>
-    <div class="card"/>
-
+    <div class="card">
         <div class="card-body">
-            <div class="Margen">
-                <a class="btn btn-primary" href="@Url.Action("AgregarCategoria","Categoria")"> + Agregar</a>
-            </div>
 
-            <table id="datatablesSimple" class="table table-striped">
+            <table id="dataCategoria" class="table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -23,6 +20,7 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
+
                 <tbody>
 
                     @foreach (var item in Model)
@@ -40,24 +38,41 @@
 
                 </tbody>
             </table>
-
         </div>
+    </div>
+</div>
 
-        <script src="~/Template/js/jquery.min.js"></script>
-        <script>
+<script src="~/Template/js/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const tabla = new DataTable('#dataCategoria',
+            {
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json',
+                },
+                lengthChange: false,
+                paging: true,
+                pagingType: "simple",  // solo muestra Anterior / Siguiente
+                info: false,
+                pageLength: 10, // cantidad datos x pag
+                columnDefs: [
+                    { className: "dt-left", targets: "_all" }
+                ]
+            })
+                // Esperar a que DataTables construya su DOM
+        tabla.on('init',function () {
+            const boton = $('<a>')
+                .attr('href', '@Url.Action("AgregarCategoria","Categoria")')
+                .addClass('btn btn-primary me-2')
+                .html('<i class="fa fa-plus"></i> Agregar');
 
-            $(document).ready(function () {
+            // Insertar SOLO en la primera fila superior
+            const filaSuperior = $('#dataCategoria_wrapper .row.justify-content-between').first();
 
-                var table = new DataTable('#example', {
-                    language: {
-                        url: '//cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json',
-                    },
-                    columnDefs: [
-                        { "className": "dt-left", "targets": "_all" }
-                    ]
-                });
-
-            });
-
-        </script>
+            filaSuperior.prepend(
+                $('<div class="col-auto"></div>').append(boton)
+            );
+        });
+    });
+</script>
 

@@ -49,12 +49,15 @@
 
 
                     <div class="form-group mb-3">
-                        
+
                         <input type="file" name="Imagen" class="form-control form-control-user" accept="image/*" />
                     </div>
-                    
-                    
-                    
+
+                    <div style="width: 200px">
+                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Procesar">
+                        <a href="@Request.UrlReferrer" class="btn btn-secondary">Cancelar</a>
+                    </div>
+
                 }
 
             </div>

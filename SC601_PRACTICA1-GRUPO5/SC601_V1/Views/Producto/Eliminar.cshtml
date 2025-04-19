@@ -2,30 +2,50 @@
 
 @{
     ViewBag.Title = "Eliminar Producto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>¿Estás seguro de que deseas eliminar el producto @Model.Nombre?</h3>
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card shadow-lg border-0 rounded-lg mt-5">
+            <div class="card-header">
+                <h3 class="text-center font-weight-light my-4">Eliminar Producto</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-center text-muted">¿Estás seguro de que deseas eliminar el siguiente producto?</p>
 
-<div>
-    <h4>Detalles del Producto</h4>
-    <dl class="dl-horizontal">
-        <dt>ID Producto</dt>
-        <dd>@Model.ID_Producto</dd>
-        <dt>Nombre</dt>
-        <dd>@Model.Nombre</dd>
-        <dt>Descripción</dt>
-        <dd>@Model.Descripcion</dd>
-        <dt>Precio</dt>
-        <dd>@Model.Precio</dd>
-    </dl>
-</div>
+                <!-- Detalles del producto -->
+                <div class="form-floating mb-3">
+                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.LabelFor(model => model.Nombre)
+                </div>
 
-@using (Html.BeginForm("EliminarConfirmado", "Producto", new { id = Model.ID_Producto }, FormMethod.Post))
-{
-    <div>
-        <input type="submit" value="Confirmar Eliminación" class="btn btn-danger" />
+                <div class="form-floating mb-3">
+                    @Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.LabelFor(model => model.Descripcion)
+                </div>
 
+                <div class="form-floating mb-3">
+                    @Html.TextBoxFor(model => model.Precio, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.LabelFor(model => model.Precio)
+                </div>
 
-        <a href="@Url.Action("ConsultarP", "Producto")"><i class="btn btn-secondary">Cancelar</i></a>
+                @if (!string.IsNullOrEmpty(Model.Imagen))
+                {
+                    <div class="text-center mb-3">
+                        <img src="@Model.Imagen" alt="Imagen del producto" class="img-fluid rounded" style="max-height: 150px;" />
+                    </div>
+                }
+
+                <!-- Botones -->
+                @using (Html.BeginForm("EliminarConfirmado", "Producto", new { id = Model.ID_Producto }, FormMethod.Post))
+                {
+                <div style="width: 200px">
+                    <input type="submit" class="btn btn-primary btn-user btn-block" value="Procesar">
+                    <a href="@Request.UrlReferrer" class="btn btn-secondary">Cancelar</a>
+                </div>
+                }
+            </div>
+        </div>
     </div>
-}
+</div>

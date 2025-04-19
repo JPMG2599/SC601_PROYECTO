@@ -87,6 +87,7 @@ namespace SC601_V1.Controllers
                     prod.Precio = model.Precio;
                     prod.Imagen = model.Imagen;
                     prod.ID_Categoria = model.ID_Categoria;
+                    prod.Activo = true;
 
                     context.Producto.Add(prod);
 

@@ -8,12 +8,12 @@
 <div class="container mt-4">
     <h2 class="mb-4">Administración de Productos</h2>
     <div class="card">
-        
-        
+
+
 
         <div class="card-body">
             <table id="datatablesProducto" class="table table-striped">
-                
+
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -32,7 +32,7 @@
                             <td>
                                 @if (!esInvitado)
                                 {
-                                   
+
                                     <a href="@Url.Action("ActualizarP", "Producto", new { id = item.ID_Producto })"><i class="fa fa-edit"></i></a>
                                     <a href="@Url.Action("Eliminar", "Producto", new { id = item.ID_Producto })"><i class="fa fa-close" style="color:red"></i></a>
                                 }
@@ -61,7 +61,7 @@
     </div>
 </div>
 <!-- Fin de mensaje de confirmación -->
-<!-- Script para que botón de agregar al carrito -->
+
 <script src="~/Template/js/jquery.min.js"></script>
 @if (!esInvitado)
 {
@@ -87,7 +87,7 @@
                 const boton = $('<a>')
                     .attr('href', '@Url.Action("AgregarP", "Producto")')
                     .addClass('btn btn-primary me-2')
-                    .html('<i class="fa fa-plus"></i> Agregar Producto');
+                    .html('<i class="fa fa-plus"></i> Agregar');
 
                 // Insertar SOLO en la primera fila superior
                 const filaSuperior = $('#datatablesProducto_wrapper .row.justify-content-between').first();
