@@ -50,9 +50,9 @@
     @if (Model != null && Model.Any())
     {
         <div class="card-footer d-flex justify-content-end pt-3" style="border-top: none; background-color: transparent">
-                <a type="submit" class="btn btn-success" href="@Url.Action("Index","Home")">
-                    Pagar
-                </a>
+            <a type="submit" class="btn btn-success" href="@Url.Action("Index","Home")">
+                Pagar
+            </a>
         </div>
     }
 </div>
@@ -73,22 +73,30 @@
             columnDefs: [
                 { "className": "dt-left", "targets": "_all" }
             ],
-            footerCallback: function (row, data, start, end, display) {
+            footerCallback: function (row, data, start, end, display)
+            {
                 var api = this.api();
 
-                // Columna de "Total", suponiendo que es la cuarta (índice 3)
+                function parseEuropeanNumber(value) {
+                    if (typeof value === 'string') {
+                        return parseFloat(
+                            value
+                                .replace(/[₡\s]/g, '')    // Quitar símbolo moneda y espacios
+                                .replace(/\./g, '')       // Quitar puntos (separadores de miles)
+                                .replace(',', '.')        // Cambiar coma decimal a punto
+                        );
+                    }
+                    return typeof value === 'number' ? value : 0;
+                }
+
                 var total = api
                     .column(3, { page: 'current' })
                     .data()
                     .reduce(function (a, b) {
-                        // Remover símbolos como "$" y comas si los hay
-                        a = typeof a === 'string' ? a.replace(/[\$,]/g, '') : a;
-                        b = typeof b === 'string' ? b.replace(/[\$,]/g, '') : b;
-
-                        return parseFloat(a) + parseFloat(b);
+                        return parseEuropeanNumber(a) + parseEuropeanNumber(b);
                     }, 0);
 
-                // Mostrar total formateado
+                // Mostrar total formateado correctamente
                 $(api.column(3).footer()).html('₡ ' + total.toLocaleString('es-CR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2

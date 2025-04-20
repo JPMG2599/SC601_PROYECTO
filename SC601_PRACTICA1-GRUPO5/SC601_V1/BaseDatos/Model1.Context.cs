@@ -36,23 +36,6 @@ namespace SC601_V1.BaseDatos
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<Venta> Venta { get; set; }
     
-        public virtual int RegistrarError(Nullable<long> idUsuario, string mensaje, string origen)
-        {
-            var idUsuarioParameter = idUsuario.HasValue ?
-                new ObjectParameter("IdUsuario", idUsuario) :
-                new ObjectParameter("IdUsuario", typeof(long));
-    
-            var mensajeParameter = mensaje != null ?
-                new ObjectParameter("Mensaje", mensaje) :
-                new ObjectParameter("Mensaje", typeof(string));
-    
-            var origenParameter = origen != null ?
-                new ObjectParameter("Origen", origen) :
-                new ObjectParameter("Origen", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RegistrarError", idUsuarioParameter, mensajeParameter, origenParameter);
-        }
-    
         public virtual int SP_ActualizarContrasena(string correo, string contrasenaActual, string contrasenaNueva)
         {
             var correoParameter = correo != null ?
@@ -202,6 +185,23 @@ namespace SC601_V1.BaseDatos
                 new ObjectParameter("Correo", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ResetearContrasena_Result>("SP_ResetearContrasena", correoParameter);
+        }
+    
+        public virtual int RegistrarError(Nullable<long> idUsuario, string mensaje, string origen)
+        {
+            var idUsuarioParameter = idUsuario.HasValue ?
+                new ObjectParameter("IdUsuario", idUsuario) :
+                new ObjectParameter("IdUsuario", typeof(long));
+    
+            var mensajeParameter = mensaje != null ?
+                new ObjectParameter("Mensaje", mensaje) :
+                new ObjectParameter("Mensaje", typeof(string));
+    
+            var origenParameter = origen != null ?
+                new ObjectParameter("Origen", origen) :
+                new ObjectParameter("Origen", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RegistrarError", idUsuarioParameter, mensajeParameter, origenParameter);
         }
     }
 }

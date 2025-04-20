@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="KN_ProyectoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="KN_ProyectoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Categoria">
           <Key>
             <PropertyRef Name="ID_Categoria" />
@@ -12,7 +12,7 @@
           <Property Name="ID_Categoria" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Descripcion" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Imagen" Type="varchar(max)" Nullable="false" />
+          <Property Name="Imagen" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Activo" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Comprador">
@@ -257,8 +257,7 @@
             <End Role="Venta" EntitySet="Venta" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="KN_ProyectoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -269,7 +268,7 @@
           <Property Name="ID_Categoria" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Imagen" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Imagen" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Producto" Relationship="Self.FK_Producto_Categoria" FromRole="Categoria" ToRole="Producto" />
         </EntityType>
@@ -480,11 +479,6 @@
             <End Role="Rol" EntitySet="Rol" />
             <End Role="Usuario" EntitySet="Usuario" />
           </AssociationSet>
-          <FunctionImport Name="RegistrarError">
-            <Parameter Name="IdUsuario" Mode="In" Type="Int64" />
-            <Parameter Name="Mensaje" Mode="In" Type="String" />
-            <Parameter Name="Origen" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="SP_ActualizarContrasena">
             <Parameter Name="Correo" Mode="In" Type="String" />
             <Parameter Name="ContrasenaActual" Mode="In" Type="String" />
@@ -509,7 +503,7 @@
           <FunctionImport Name="sp_ConsultaProd" ReturnType="Collection(KN_ProyectoModel.sp_ConsultaProd_Result)" />
           <FunctionImport Name="SP_ConsultarCategorias" ReturnType="Collection(KN_ProyectoModel.SP_ConsultarCategorias_Result)" />
           <FunctionImport Name="sp_EliminarProducto">
-            <Parameter Name="ID_Producto" Mode="In" Type="Int64" />
+          <Parameter Name="ID_Producto" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="SP_IniciarSesion" ReturnType="Collection(KN_ProyectoModel.SP_IniciarSesion_Result)">
             <Parameter Name="Correo" Mode="In" Type="String" />
@@ -525,7 +519,12 @@
             <Parameter Name="Telefono" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ResetearContrasena" ReturnType="Collection(KN_ProyectoModel.SP_ResetearContrasena_Result)">
-            <Parameter Name="Correo" Mode="In" Type="String" />
+          <Parameter Name="Correo" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="RegistrarError">
+            <Parameter Name="IdUsuario" Mode="In" Type="Int64" />
+            <Parameter Name="Mensaje" Mode="In" Type="String" />
+            <Parameter Name="Origen" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_ConsultaProd_Result">
@@ -541,7 +540,7 @@
           <Property Type="Int64" Name="ID_Categoria" Nullable="false" />
           <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
           <Property Type="String" Name="Descripcion" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="Imagen" Nullable="false" />
+          <Property Type="String" Name="Imagen" Nullable="false" MaxLength="200" />
         </ComplexType>
         <ComplexType Name="SP_IniciarSesion_Result">
           <Property Type="Int64" Name="ID_Usuario" Nullable="false" />
@@ -664,7 +663,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="RegistrarError" FunctionName="KN_ProyectoModel.Store.RegistrarError" />
           <FunctionImportMapping FunctionImportName="SP_ActualizarContrasena" FunctionName="KN_ProyectoModel.Store.SP_ActualizarContrasena" />
           <FunctionImportMapping FunctionImportName="SP_ActualizarUsuario" FunctionName="KN_ProyectoModel.Store.SP_ActualizarUsuario" />
           <FunctionImportMapping FunctionImportName="sp_AgregarProducto" FunctionName="KN_ProyectoModel.Store.sp_AgregarProducto" />
@@ -733,6 +731,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="RegistrarError" FunctionName="KN_ProyectoModel.Store.RegistrarError" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

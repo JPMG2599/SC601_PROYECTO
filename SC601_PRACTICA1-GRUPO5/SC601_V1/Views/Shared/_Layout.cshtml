@@ -68,7 +68,7 @@
                         <li><a class="dropdown-item" href="@Url.Action("ActualizarUsuario", "Usuario", new {q = Session["IdUsuario"] })" )">Actualizar Datos</a></li>
                         <li><a class="dropdown-item" href="@Url.Action("CambiarContrasena","Usuario")">Cambiar Contraseña</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="@Url.Action("CerrarSesion", "Usuario")">Logout</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("CerrarSesion", "Usuario")">Cerrar Sesión</a></li>
 
                     }
                     @if (rol == "Invitad@")
