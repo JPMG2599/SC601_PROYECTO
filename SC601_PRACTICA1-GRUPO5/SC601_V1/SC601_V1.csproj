@@ -263,6 +263,17 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Imagenes\Categorias\1.jpg" />
+    <Content Include="Imagenes\Categorias\2.jpg" />
+    <Content Include="Imagenes\Categorias\3.jpg" />
+    <Content Include="Imagenes\Categorias\4.jpg" />
+    <Content Include="Imagenes\Categorias\5.jpg" />
+    <Content Include="Imagenes\Categorias\7.jpg" />
+    <Content Include="Imagenes\Categorias\8.jpg" />
+    <Content Include="Imagenes\Shared\floristeria.png" />
+    <Content Include="Imagenes\Shared\flowers-1.png" />
+    <Content Include="Imagenes\Shared\flowers-2.png" />
+    <Content Include="Imagenes\Shared\flowers-9.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
