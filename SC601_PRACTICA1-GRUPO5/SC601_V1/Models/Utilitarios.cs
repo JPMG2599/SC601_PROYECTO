@@ -10,6 +10,7 @@ namespace SC601_V1.Models
     public class Utilitarios
     {
         public static readonly string RutaProductos = AppDomain.CurrentDomain.BaseDirectory + "Imagenes/Productos\\";
+        public static readonly string RutaCategorias = AppDomain.CurrentDomain.BaseDirectory + "Imagenes/Categorias\\";
 
         public bool EnviarCorreo(string correo, string mensaje, string titulo)
         {
@@ -27,7 +28,7 @@ namespace SC601_V1.Models
             SmtpClient client = new SmtpClient("smtp.office365.com", 587);
             client.Credentials = new System.Net.NetworkCredential(cuenta, contrasenna);
             client.EnableSsl = true;
-            //client.Send(message);
+            client.Send(message);
             return true;
         }
     }

@@ -104,5 +104,22 @@ namespace SC601_V1.Controllers
             }
         }
         #endregion
+
+        #region Limpiar
+        [HttpPost]
+        public JsonResult Limpiar()
+        {
+            try
+            {
+                Session["Carrito"] = null;
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        #endregion
     }
 }

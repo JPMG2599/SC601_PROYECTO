@@ -50,12 +50,26 @@
     @if (Model != null && Model.Any())
     {
         <div class="card-footer d-flex justify-content-end pt-3" style="border-top: none; background-color: transparent">
-            <a type="submit" class="btn btn-success" href="@Url.Action("Index","Home")">
+            <button id="btnPagar" type="button" class="btn btn-success">
                 Pagar
-            </a>
+            </button>
+
         </div>
     }
+
 </div>
+
+<div id="toastPagar" class="toast-container position-fixed top-0 end-0 p-3">
+    <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Se ha finalizado su compra.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+    </div>
+</div>
+
 
 <script src="~/Template/js/jquery.min.js"></script>
 <script>
@@ -73,8 +87,7 @@
             columnDefs: [
                 { "className": "dt-left", "targets": "_all" }
             ],
-            footerCallback: function (row, data, start, end, display)
-            {
+            footerCallback: function (row, data, start, end, display) {
                 var api = this.api();
 
                 function parseEuropeanNumber(value) {
@@ -103,7 +116,35 @@
                 }));
             }
         });
+        $('#btnPagar').on('click', function () {
+            // Hacer limpieza por AJAX
+            $.ajax(
+                {
+                    url: '@Url.Action("Limpiar", "Carrito")',
+                    type: 'POST',
+                    success: function (response) {
+                        if (response.success) {
+                            // Mostrar toast de compra finalizada
+                            const toastEl = document.querySelector('#toastPagar .toast');
+                            if (toastEl) {
+                                const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                                toast.show();
+                            }
 
+                            // Redirigir luego de 3 segundos
+                            setTimeout(function () {
+                                window.location.href = '@Url.Action("Index", "Home")';
+                            }, 3200);
+                        } else {
+                            alert("Error al limpiar el carrito.");
+                        }
+                    },
+                    error: function () {
+                        alert("Error de conexión con el servidor.");
+                    }
+                }
+            );
+        });
     });
 
 </script>

@@ -13,6 +13,7 @@ namespace SC601_V1.Controllers
     public class CategoriaController : Controller
     {
         RegistroErrores error = new RegistroErrores();
+        Utilitarios util = new Utilitarios();
 
         [HttpGet]
         public ActionResult ConsultarCategorias()
@@ -76,7 +77,7 @@ namespace SC601_V1.Controllers
                     if (result > 0)
                     {
                         string rutaBase = AppDomain.CurrentDomain.BaseDirectory;
-                        string carpeta = Path.Combine(rutaBase, "ImagenesCategorias");
+                        string carpeta = Path.Combine(rutaBase, "Imagenes/Categorias");
 
                         if (!Directory.Exists(carpeta))
                             Directory.CreateDirectory(carpeta);
@@ -85,7 +86,7 @@ namespace SC601_V1.Controllers
                         string ruta = Path.Combine(carpeta, tabla.ID_Categoria + extension);
                         ImagenCategoria.SaveAs(ruta);
 
-                        tabla.Imagen = "/ImagenesCategorias/" + tabla.ID_Categoria + extension;
+                        tabla.Imagen = "/Imagenes/Categorias/" + tabla.ID_Categoria + extension;
                         context.SaveChanges(); 
 
                         return RedirectToAction("ConsultarCategorias", "Categoria");
@@ -160,50 +161,32 @@ namespace SC601_V1.Controllers
                     info.Nombre = model.Nombre;
                     info.Descripcion = model.Descripcion;
 
-                    if (ImagenCategoria != null && ImagenCategoria.ContentLength > 0)
+                    if (ImagenCategoria != null)
                     {
                         string extension = Path.GetExtension(ImagenCategoria.FileName);
-                        string folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ImagenesCategorias");
-                        string nuevaRuta = Path.Combine(folder, model.ID_Categoria + extension);
+                        string ruta = Utilitarios.RutaCategorias + info.ID_Categoria + extension;
 
-                        // Asegurarse que exista la carpeta
-                        if (!Directory.Exists(folder))
-                            Directory.CreateDirectory(folder);
-
-                        // Eliminar imagen anterior si existe físicamente
-                        if (!string.IsNullOrEmpty(info.Imagen))
-                        {
-                            string rutaAnterior = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, info.Imagen.TrimStart('/').Replace("/", "\\"));
-                            if (System.IO.File.Exists(rutaAnterior))
-                                System.IO.File.Delete(rutaAnterior);
-                        }
+                        // Eliminamos la imagen existente para reemplazarla
+                        if (info.Imagen != null)
+                            System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + info.Imagen);
 
                         // Guardar nueva imagen
-                        ImagenCategoria.SaveAs(nuevaRuta);
+                        ImagenCategoria.SaveAs(ruta);
 
                         // Actualizar ruta relativa para base de datos
-                        info.Imagen = "/ImagenesCategorias/" + model.ID_Categoria + extension;
+                        info.Imagen = "/Imagenes/Categorias/" + model.ID_Categoria + extension;
                     }
 
                     var result = context.SaveChanges();
 
-                    if (result > 0)
-                        return RedirectToAction("ConsultarCategorias", "Categoria");
-                    else
-                    {
-                        ViewBag.Mensaje = "La información no se ha podido actualizar correctamente";
-                        return View(model);
-                    }
+                    
+                    return RedirectToAction("ConsultarCategorias", "Categoria");
                 }
             }
             catch (Exception ex)
             {
-                Exception realError = ex;
-                while (realError.InnerException != null)
-                    realError = realError.InnerException;
-
                 error.RegistrarError(ex.Message, "Post ActualizarCategoria");
-                ViewBag.Error = "Error al actualizar la categoría: " + ex.Message + " | Detalle real: " + realError.Message;
+                ViewBag.Error = "Error al actualizar la categoría: " + ex.Message;
                 return View("Error");
             }
         }

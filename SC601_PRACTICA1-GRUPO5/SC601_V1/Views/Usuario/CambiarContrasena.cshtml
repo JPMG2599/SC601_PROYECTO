@@ -69,13 +69,14 @@
                     }
                     else
                     {
-                        <div class="mt-4 mb-0">
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-block">Cambiar Contraseña</button>
-                            </div>
+                        <div class="form-floating mb-3">
+
+                            <input type="submit" value="Cambiar contraseña" class="btn btn-primary" />
+                            <a href="@Request.UrlReferrer" class="btn btn-secondary">Cancelar</a>
                         </div>
-                    }
+                    
                 }
+            }
                 <!-- Fin  de Formulario -->
             </div>
 
@@ -87,4 +88,4 @@
             }
         </div>
     </div>
-</div>
+    </div>

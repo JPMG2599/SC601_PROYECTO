@@ -105,7 +105,7 @@ namespace SC601_V1.Controllers
                     {
                         Session["Correo"] = model.Correo;
                         string mensaje = $"Hola {info.Nombre}, por favor utilice el siguiente código para ingresar al sistema: {info.NuevaContrasena}";
-                        var notificacion = util.EnviarCorreo(info.Correo, "Recuperar Contraseña", mensaje);
+                        var notificacion = util.EnviarCorreo(info.Correo, mensaje, "Recuperar Contraseña");
 
                         if (notificacion)
                             return RedirectToAction("CambiarContrasena", "Usuario");
@@ -280,7 +280,7 @@ namespace SC601_V1.Controllers
 
         // POST: Crear un Usuario
         [HttpPost]
-        public ActionResult ActualizarUsuario(UsuarioModel model)
+        public ActionResult ActualizarUsuario(UsuarioModel model)   
         {
             try
             {
