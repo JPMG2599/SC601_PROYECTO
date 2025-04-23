@@ -96,11 +96,18 @@ namespace SC601_V1.Controllers
             {
                 using (var context = new KN_ProyectoEntities())
                 {
-                    // Verificamos que el correo exista en la base de datos
-                    // Si existe, genera una contraseña y la actualiza
+                    // Verificar si el correo existe antes de ejecutar el SP
+                    var existeCorreo = context.Usuario.Any(u => u.Correo == model.Correo);
+
+                    if (!existeCorreo)
+                    {
+                        ViewBag.Error = "El correo ingresado no se encuentra registrado.";
+                        return View(model);
+                    }
+
+                    // Si existe, ejecuta el SP
                     var info = context.SP_ResetearContrasena(model.Correo).FirstOrDefault();
 
-                    // Si encuentra algo, se envía el correo para restablecer la contraseña
                     if (info != null)
                     {
                         Session["Correo"] = model.Correo;
@@ -108,26 +115,30 @@ namespace SC601_V1.Controllers
                         var notificacion = util.EnviarCorreo(info.Correo, mensaje, "Recuperar Contraseña");
 
                         if (notificacion)
+                        {
                             return RedirectToAction("CambiarContrasena", "Usuario");
+                        }
+                        else
+                        {
+                            ViewBag.Error = "No se pudo enviar el correo. Por favor, intente nuevamente.";
+                            return View(model);
+                        }
                     }
 
-                    // Si no encuentra nada, mostramos mensaje de error
-                    else if (info == null)
-                    {
-                        ViewBag.Error = "Su información no se ha podido validar correctamente";
-                        return View();
-                    }
-
-
+                    // Como control extra (por si info fuera null)
+                    ViewBag.Error = "No se pudo generar la nueva contraseña. Inténtelo más tarde.";
+                    return View(model);
                 }
-                return View();
             }
             catch (Exception ex)
             {
                 error.RegistrarError(ex.Message, "Post RecuperarContrasena");
-                return View("Error");
+                ViewBag.Error = "Ocurrió un error inesperado. Por favor, intente más tarde.";
+                return View(model);
             }
         }
+
+
         #endregion
 
         #region CambiarContraseña
